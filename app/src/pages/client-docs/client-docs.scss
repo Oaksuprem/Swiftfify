@@ -1,0 +1,94 @@
+page-client-docs {
+	li{
+		margin-top: 8px;
+	}
+	.invoiceTitle{
+		color: color($colors, headerColor);
+		float: right;
+		font-size: 20px;
+		font-weight: bold;
+		margin-right: 20px;
+	}
+	.input3{
+ 		border:none;
+ 		border-bottom: 1px solid grey;
+ 		width: 180px;
+ 	}
+	.invoiceTitle1{
+		float: right;
+		font-size: 14px;
+		margin-top: 10px;
+		text-align: right;
+		width: 100%;
+		margin-right: 20px;
+		color: color($colors, headerColor);
+
+	}
+	.input2{
+ 		border:none;
+ 		border-bottom: 1px solid lightgrey;
+ 		width: 70%;
+ 		height: 30px;
+ 		font-size: 14px;
+ 		font-weight: lighter;
+ 		color: black;
+ 	}
+ 	.input3{
+ 		width: 48%;
+ 	}
+ 	.list1{
+ 		list-style: none;
+ 		margin:0px;
+ 		text-align: center;
+ 	}
+ 	.value{
+ 		font-size: 15px;
+ 		font-weight: bold;
+ 		margin-left: 5px;
+
+ 	}
+ 	.Pay{
+ 		padding: 10px;
+ 		font-size:16px;
+ 		margin-top: 10px;
+ 	}
+	.billText{
+		color: color($colors, headerColor);
+		font-size: 18px;
+        margin-left: 10px;
+	}
+	.scrollmenu {
+    background-color: transparent;
+    overflow: auto;
+    white-space: nowrap;
+    padding-bottom: 5px;
+   }
+   .input1{
+ 		background-color: white;
+ 		width:150px;
+ 		margin: 0px;
+ 		border: 1px solid lightgrey
+    
+ 	}
+ 	.conditions{
+ 		width:300px;
+ 		border: 2px solid color($colors, headerColor);
+ 		border-radius: 2px;
+ 		font-size: 14px;
+ 		margin-top: 20px;
+ 		margin-left: 40px;
+
+ 	}
+ 	.sbmtReason{
+ 		width: 200px;
+ 		padding: 7px;
+ 		padding-left:20px;
+ 		padding-right:20px;
+ 		border-radius: 20px;
+        color: white;
+        font-size: 16px;
+       margin-top: 20px;
+ 		background-color: #750481
+ 	}
+
+}

@@ -1,0 +1,288 @@
+<ion-header >
+  <ion-navbar color="headerColor">
+    <div class="reQuest" *ngIf="doc =='deliveryNote' ">Delivery Note
+      <button (click)="makeInspection()" style="float: right" ion-button *ngIf="deliveryNote.to.email == acc.email">Inspection</button>
+    </div> 
+    <div class="reQuest" *ngIf="doc =='invoice' ">Invoice
+      <button (click)="makedeliveryNote(bider.items)" style="float: right" ion-button *ngIf="invoicedata && invoicedata.creator !== acc.email && !del">Delivery Note</button>
+      <button (click)="makeReceipt()" style="float: right" ion-button *ngIf="invoicedata && invoicedata.creator == acc.email && !receipt">Receipt</button>
+    </div>
+    <ion-title *ngIf="doc =='InspectionNote' ">Inspection certificate</ion-title>
+    <ion-title *ngIf="doc =='receipt' ">Receipt</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content style="background-color: white;">
+	 <ion-grid col-12 style="padding:0px; margin:0px;">
+	 	<div *ngIf="doc =='invoice' " offset-lg-2 offset-md-2 style="padding:0px;">
+ 			<div style="padding:0px; margin:0px;">
+				 <div class="invoiceTitle1">	Order No. {{serial}}</div>
+
+ 				<div *ngIf="to" style="margin-top: 20px;">
+ 					<ul style="list-style: none;margin: 0px;padding: 10px; font-size: 16px;">
+ 						<li>{{to.businessName}}</li>
+ 						<li style="margin-top: 10px;">Street: {{to.address.street}}</li>
+ 						<li><span style="font-weight: bold;margin-right: 50px">Phone: </span>+254 {{to.phone}}</li>
+ 						<li><span style="font-weight: bold;margin-right: 50px">Email: </span>{{to.email}}</li>
+ 					</ul>
+ 				</div>
+
+ 				<div style="margin-top: 20px;" *ngIf="from">
+ 					<span class="billText">Bill To</span>
+ 					<ul style="list-style: none;margin: 0px;padding: 10px; font-size: 16px;">
+ 						<li>{{from.businessName}}</li>
+ 						<li style="margin-top: 10px;">Street: {{from.address.street}}</li>
+ 						<li><span style="font-weight: bold;margin-right: 50px">Phone: </span>+254 {{from.phone}}</li>
+ 						<li><span style="font-weight: bold;margin-right: 50px">Email: </span>{{from.email}}</li>
+ 					</ul>
+ 				</div>
+ 			</div>
+ 			<div style="margin-top:25px;">
+ 				<div class="scrollmenu" offset-lg-1 offset-md-1  >
+	            	 <div>
+			        	  <span *ngFor=" let title of titles let v = index" >
+							  <button *ngIf="v ==0" style="border: 1px solid lightgrey;text-align: left;background-color: transparent;font-size:16px;font-weight:bold; width:70px;"  >
+							  	{{title}}
+							   </button>
+							   <button *ngIf="v !==0 && v !== 1" style="border: 1px solid lightgrey;text-align: left;background-color: transparent;font-size:16px;font-weight:bold; width:100px;"  >
+							  	{{title}}
+							   </button>
+							    <button   *ngIf="v == 1" style="border: 1px solid lightgrey;text-align: left;background-color: transparent;font-size:16px;font-weight:bold; width:150px;overflow: hidden;"  >
+							  	{{title}}
+							   </button>
+							</span>
+						</div>
+					<div>
+					<div *ngFor="let itemy of items let f = index">
+		        	  <span *ngFor=" let title of titles let v = index" >
+						  <button *ngIf="v ==0"  style="border: 1px solid lightgrey;text-align: left;background-color: transparent;font-size:16px;font-weight:bold; width:70px;color:grey"  >
+						  	  {{f+1}}
+						   </button>
+						   <button *ngIf="v == 1" style="border: 1px solid lightgrey;text-align: left;background-color: transparent;font-size:16px;font-weight:bold; width:150px;color:grey;overflow: hidden;"  >
+						  	  {{itemy.desc}}
+						   </button>
+						   <button *ngIf="v ==2" style="border: 1px solid lightgrey;text-align: left;background-color: transparent;font-size:16px;font-weight:bold; width:100px;color:grey"  >
+						  	  {{itemy.unit}}
+						   </button>
+						    <button *ngIf="v ==3" style="border: 1px solid lightgrey;text-align: left;background-color: transparent;font-size:16px;font-weight:bold; width:100px;color:grey"  >
+						  	  {{itemy.qty}}
+						   </button>
+						    <button *ngIf="v ==4" style="border: 1px solid lightgrey;text-align: left;background-color: transparent;font-size:16px;font-weight:bold; width:100px;color:grey"  >
+						  	  {{itemy.price}}
+						   </button>
+						    <button *ngIf="v ==5" style="border: 1px solid lightgrey;text-align: left;background-color: transparent;font-size:16px;font-weight:bold; width:100px;color:grey"  >
+						  	  {{itemy.total_value}}
+						   </button>
+						</span>
+					</div>
+				</div>
+				<div style="width: 100%;">
+	        	  <span style="float:right;margin-right: 20%; font-family: arial">
+					  <button  style="border: 1px solid lightgrey;text-align: left;background-color: transparent;font-size:15px; width:100px;color:black"  >
+					  	Total Value
+					   </button>
+					   <button *ngIf="bider"  style="border: 1px solid lightgrey;text-align: left;background-color: transparent;font-size:15px; width:100px;color:black"  >
+					   {{bider.amount}}
+					</button>
+					</span>
+				</div>
+				 </div>
+
+ 			</div>
+ 			<div class="conditions">
+ 				<ul>
+ 					<li>{{dueDate}}</li>
+ 					<li>If failure to honour payment date, is subject to 2% of total invoice amount penalty</li>
+ 				</ul>
+ 			</div>
+ 			<div *ngIf="bider && !bider.invoiced" style="text-align: center; margin-top: 10px;margin-bottom: 10px; width:100%;">
+          		<button (click)="sendInvoice()"class="sbmtReason">Submit</button> 
+          	</div>
+	 	</div>
+	 	<div *ngIf="doc =='deliveryNote' "  offset-lg-2 offset-md-2 style="padding:0px;">
+			 <div class="invoiceTitle1">	Order No. {{deliveryNote.serial}}</div>
+
+ 				<div style="margin-top: 20px;">
+ 					<ul style="list-style: none;margin: 0px;padding: 10px; font-size: 16px;">
+ 						<li>{{deliveryNote.to.businessName}}</li>
+ 						<li style="margin-top: 10px;">Street: {{deliveryNote.to.address.street}}</li>
+ 						<li><span style="font-weight: bold;margin-right: 50px">Phone: </span>+254{{deliveryNote.to.phone}}</li>
+ 						<li><span style="font-weight: bold;margin-right: 50px">Email: </span>{{deliveryNote.to.email}}</li>
+ 					</ul>
+ 				</div>
+
+ 				<div style="margin-top: 20px;">
+ 					<span class="billText">Supplied By</span>
+ 					<ul style="list-style: none;margin: 0px;padding: 10px; font-size: 16px;">
+ 						<li>{{deliveryNote.from.businessName}}</li>
+ 						<li style="margin-top: 10px;">Street: {{deliveryNote.from.address.street}}</li>
+ 						<li><span style="font-weight: bold;margin-right: 50px">Phone: </span>+254{{deliveryNote.from.phone}}</li>
+ 						<li><span style="font-weight: bold;margin-right: 50px">Email: </span>{{deliveryNote.from.email}}</li>
+ 					</ul>
+ 				</div>
+ 				<div class="deliveryDates">
+ 					<ion-item no-lines>
+ 						<ion-label>Other deliveries</ion-label>
+ 						<ion-select [(ngModel)]="del" (ionChange)="deliveryChange(del)">
+ 							<ion-option selected value="New">New Delivery</ion-option>
+ 							<ion-option  *ngFor="let delivery of deliveryNote.delivers let inx = index" value="{{inx}}">{{delivery.date}}</ion-option>
+ 						</ion-select>
+ 					</ion-item>
+ 				</div>
+ 				<div class="scrollmenu"  offset-lg-1 offset-md-1  style="margin-top:30px; ">
+	            	  <span *ngFor=" let title of titles0 let j =  index">
+						  <button *ngIf="j == 0" style="border: 1px solid lightgrey;text-align: left;background-color: transparent;font-size:16px;font-weight:bold; width:200px;"  >
+						  	{{title}}
+						   </button>
+						   <button *ngIf="j !== 0" style="border: 1px solid lightgrey;text-align: left;background-color: transparent;font-size:16px;font-weight:bold; width:100px;"  >
+						  	{{title}}
+						   </button>
+					 </span>
+					 <div *ngFor=" let item of deliveryNote.newDel.items let G = index" >
+						 <span  *ngFor=" let title of titles0 let f = index " >
+						  	<input *ngIf="f == 0" [(ngModel)]="item.desc" readonly class="input1"  style="width: 200px;" type="text">
+						  	<input *ngIf="f == 3 " [(ngModel)]="item.bal" readonly class="input1"  style="width: 100px;" type="text">
+						  	<input *ngIf="f == 1" [(ngModel)]="item.qty" readonly class="input1"  style="width: 100px;" type="text">
+						  	<input *ngIf="f == 2 && deliveryNote.to.email !== acc.email" [(ngModel)]="item.del" (keypress)="itemCal($event, G)" (keyup)="calculateBal($event, G)" class="input1"  style="width: 100px;" type="number">
+						  	<input *ngIf="f == 2 && deliveryNote.to.email == acc.email" [(ngModel)]="item.del" readonly="" class="input1"  style="width: 100px;" type="number">
+					  	</span>
+					 </div>
+			    </div>
+			   <div style="display: inline-block;padding: 10px; margin-top:20px">
+			   	  <ul style="margin: 0px;padding: 10px">
+			   	    <li>Notice must be given to us on any goods not received within 10days from the date of despatch stated on the invoice.</li>
+			   	    <li>Any shortage or damage must be notified within 72hours of receipt of goods.</li>
+			   	    <li>Complains can only be accepted if made within 30days of goods receipt.</li>
+			   	    <li>No goods may be returned without prior authorisation from the company.</li>
+			      </ul>
+			   </div>
+			    	<div style="padding: 15px;" >
+		      		   		<div style="font-weight: bold; margin-bottom: 10px;">
+		      		   			<div style="margin-bottom: 10px;">Received by</div>
+				      		   			<ion-input [(ngModel)]=deliveryNote.newDel.received class="input2" type="text"></ion-input>
+		      		   			<div style="margin-top: 15px;">Date</div>
+	      		   			<ion-item no-lines>
+				          		<ion-input style="background-color: white" [(ngModel)]=deliveryNote.newDel.date class="input3"  type="text" ></ion-input>
+				          	</ion-item>
+			      		   	</div>
+		      		</div>
+		      		<div *ngIf="deliveryNote.to.email !== acc.email" style="text-align: center; margin-top: 10px;margin-bottom: 10px; width:100%;">
+		          		<button (click)="makedeliveryNote1()" class="sbmtReason">Submit</button> 
+		          	</div>
+       </div>
+       <div  *ngIf="doc =='InspectionNote' ">
+		 <div class="invoiceTitle1">	Date {{provider.changeDate(ins.dateCreated)}}</div>
+		 <div class="invoiceTitle1">	Order No. {{ins.serial}}</div>
+		 <div style="margin-top: 20px;">
+ 					<div  style="margin-top: 20px;">
+ 					<ul style="list-style: none;margin: 0px;padding: 10px; font-size: 16px;">
+ 						<li>{{ins.to.businessName}}</li>
+ 						<li style="margin-top: 10px;">Street: {{ins.to.address.street}}</li>
+ 						<li><span style="font-weight: bold;margin-right: 50px">Phone: </span>+254 {{ins.to.phone}}</li>
+ 						<li><span style="font-weight: bold;margin-right: 50px">Email: </span>{{ins.to.email}}</li>
+ 					</ul>
+ 				</div>
+
+ 				<div style="margin-top: 20px;">
+ 					<span class="billText">Supplied by</span>
+ 					<ul style="list-style: none;margin: 0px;padding: 10px; font-size: 16px;">
+ 						<li>{{ins.from.businessName}}</li>
+ 						<li style="margin-top: 10px;">Street: {{ins.from.address.street}}</li>
+ 						<li><span style="font-weight: bold;margin-right: 50px">Phone: </span>+254 {{ins.from.phone}}</li>
+ 						<li><span style="font-weight: bold;margin-right: 50px">Email: </span>{{ins.from.email}}</li>
+ 					</ul>
+ 				</div>
+
+           <div style="padding: 10px; font-size: 14px; font-family: sans-serif;">
+	           We hereby certify that the following item have been duly inspected by our representatives and made up in accordance with all the requirements as order specified;
+	       </div>
+           <div class="scrollmenu" offset-lg-1 offset-md-1  style="margin-top:10px; ">
+        	  <span *ngFor=" let title of titles1 let j =  index">
+				  <button *ngIf="j == 0" style="border: 1px solid lightgrey;text-align: left;background-color: transparent;font-size:16px;font-weight:bold; width:300px;"  >
+				  	{{title}}
+				   </button>
+				   <button *ngIf="j == 1" style="border: 1px solid lightgrey;text-align: left;background-color: transparent;font-size:16px;font-weight:bold; width:150px;"  >
+				  	{{title}}
+				   </button>
+				</span>
+				<div *ngFor=" let item of ins.items" >
+			     <span  *ngFor=" let title of titles1 let f = index " >
+			  	<button *ngIf="f == 0" style="border: 1px solid lightgrey;text-align: left;background-color: transparent;font-size:16px; width:300px;"  >
+				  	{{item.desc}}
+				   </button>
+			  	<select *ngIf="(f == 1)" [(ngModel)]="item.rate" style="border: 1px solid lightgrey; width:150px;">
+			  		<option value="None">None</option>
+			  		<option value="Satisfied">Satisfied</option>
+			  		<option value="Unsatisfied">Unsatisfied</option>
+			  	</select>
+			  </span>
+			</div>
+           </div>
+
+			<div style="padding: 8px">
+				 <div col-lg-8 offset-lg-2 col-12  class="list1" >
+	      		   	<div >
+	      		   		<div offset-lg-1 offset-xl-1 style="font-weight: bold; margin-bottom: 10px;text-align: left;">
+	      		   			<span>Name</span>
+	      		   			<span style="float: right; margin-right: 15%">Designation</span>
+	      		   		</div>
+	          		   	<div *ngFor="let apps of ins.approvedBy" offset-lg-2 offset-xl-2>
+	          		   		<input class="input3" [(ngModel)]="apps.name" type="text">
+	          		   		<input  class="input3" [(ngModel)]="apps.design"  type="text" >
+	          		   	</div>
+	          		   
+	          		   		<div *ngIf="!ins.rated" style="text-align: center; margin-top: 20px; width:100%;">
+				          		<button (click)="createInspection()" class="sbmtReason">Submit</button> 
+				          	</div>
+	      		   </div>
+      		   </div>
+           </div>
+       </div>
+   </div>
+           <div  *ngIf="doc =='receipt' ">
+		 		<div class="invoiceTitle1">	 No. {{serial}}</div>
+		 		<div class="Pay" style="margin-top:40px">Paid by: <span class="value">{{to.businessName}}</span></div>
+		 		<div class="Pay">Paid To: <span class="value">{{from.businessName}}</span></div>
+           
+              <div class="scrollmenu" offset-lg-1 offset-md-1  style="margin-top:10px; ">
+	        	  <span *ngFor=" let title of titles2 let j =  index">
+					  <button *ngIf="j == 0" style="height:50px;border: 1px solid lightgrey;text-align: left;background-color: transparent;font-size:16px;font-weight:bold; width:300px;"  >
+					  	{{title}}
+					   </button>
+					   <button *ngIf="j == 1" style="height:50px;border: 1px solid lightgrey;text-align: left;background-color: transparent;font-size:16px;font-weight:bold; width:150px;"  >
+					  	{{title}}
+					   </button>
+					</span>
+					<div  >
+					     <span  >
+					  	<button  style="height:150px;border: 1px solid lightgrey;text-align: left;background-color: transparent;font-size:16px; width:300px;"  >
+		 						LPO NO. {{serial}}
+		  				   </button>
+		  				   <button style="height:150px;border: 1px solid lightgrey;text-align: left;background-color: transparent;font-size:16px; width:150px;"  >
+		 							{{bider.amount}}
+		  				   </button>
+					  </span>
+					</div>
+			  </div>
+		 		<div *ngIf="!receipt" class="Pay">Date: <span class="value">{{todayDate()}}</span></div>
+		 		<div *ngIf="receipt && receipt.dateCreated" class="Pay">Date: <span class="value">{{provider.changeDate(receipt.dateCreated)}}</span></div>
+		 		<div *ngIf="receipt" style="text-align: center;">
+			 		<div padding style="font-size: 16px; color:grey; margin-top: 10px; margin-bottom: 10px;">
+			 				Transaction Id:  <span class="value">KSDFJGKSDFKGSJDFGSDF.</span>
+			 		</div>
+			 		<span *ngIf="!receipt.confirmed && invoicedata.creator == acc.email" class="sbmtReason" style="background-color: lightgrey; color: black">Awaiting confirmation</span> 
+			 		<span *ngIf="receipt.confirmed" class="sbmtReason" style="background-color: lightgreen; color: black">Payment confirmed</span> 
+			 	</div>
+			 	<div *ngIf="receipt">
+			 		<div *ngIf="!receipt.confirmed && invoicedata.creator !== acc.email" style="text-align: center; margin-top: 20px; width:100%;">
+		          		<button (click)="confirmPayment()" class="sbmtReason">Confirm payment</button> 
+		          	</div>
+		          	<div *ngIf="!receipt && invoicedata.creator == acc.email " style="text-align: center; margin-top: 20px; width:100%;">
+		          		<button (click)="makePayment()" ion-button class="sbmtReason" style="color: white">Make payment</button> 
+		          	</div>
+	             </div>
+
+           </div>
+ 
+	 </ion-grid>
+
+</ion-content>

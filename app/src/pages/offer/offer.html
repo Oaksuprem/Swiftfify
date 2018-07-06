@@ -1,0 +1,81 @@
+
+<ion-header>
+
+  <ion-navbar color="headerColor">
+    <div class="header">Creating an offer
+     	<button (click)="createDoc()" class="button" *ngIf="(!req.quotationId && req.Id == acc.email)" [disabled]="selections.length < 1">Create quotation</button>
+    </div>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content style="background-color:white">
+	<ion-grid>
+		<ion-row>
+			<ion-col offset-xl-2 col-xl-8 offset-lg-2 col-lg-8 >
+				<div *ngIf="req.quotationId && (req.Id == acc.email || sentQuotation)">
+					<button (click)="gotoQuotation()" class="viewQuot">View Quotation</button>
+				</div>
+				<div class="ContentDiv">
+	    	      <div class="title0">
+	    	      	<img src="{{provider.url+'/'+req.pic}}" class="profileImg" imageViewer/>
+	    	        <div> {{req.businessName}}</div></div>
+			    	<div class="title"><a href="#">{{req.title}}</a></div>
+			    	<div class="posted">Posted on {{req.postedAt}}</div><br/>
+			    	<div class="title1">{{req.details}}</div>
+			    	<div class=" title2">
+			    		<span>Search tags</span><br/><br/>
+			    		<button  *ngFor="let tag of req.searchTags" >{{tag}}</button>
+			    	</div>
+			    	<div class="title3">
+			    		<span >Proposals submitted: <span id="proposals">{{req.props}}</span></span>
+			    		<button>
+			    			<ion-icon name="pin"></ion-icon>
+			    			{{req.location}}
+			    		</button>
+			    	</div>
+			    </div>
+			    <ion-list class="ionlist" *ngIf="acc.email !== req.Id && !sentRequest">
+					<ion-item no-lines>
+						<ion-label stacked>Type your offer response here</ion-label>
+						<ion-textarea [(ngModel)]="details" maxlength="600" rows="15" (keyup)="count(details)"  class="ionitem1">
+							
+						</ion-textarea>
+					</ion-item>
+					<div class="max" value="600">Remaining: 600</div>
+					<div style="text-align: center; margin-top: 20px; width:100%;">
+		          		<button *ngIf="!sentRequest" (click)="sendOffer(details)" [disabled]="!details || details.trim() == '' " class="sbmtReason">Submit</button> 
+		          	</div>
+				</ion-list>
+				
+		        <div *ngIf="sentRequest" >
+					<div col-12 class="ContentDiv">
+						 <div class="title0">
+			    	      	<img src="{{provider.url+'/'+req.proposal.image}}" style="float: left;" class="profileImg" imageViewer/>
+			    	        <div offset-1 style="float: left;width: 70%"> {{req.proposal.name}}  <span class="posted" style="float: left;">{{changeDate(req.proposal.date)}}</span></div>
+			    	     </div>
+				    	<div class="title1">{{req.proposal.request}}</div>
+				    	<div *ngIf="!req.quotationId" style="text-align: center; margin-top: 20px; width:100%;">
+			            	<button (click)="removeRequest(acc.email)" *ngIf="req.proposal.accepted !== true" class="sbmtReason"   style="width: auto;">Remove offer</button> 
+		                </div>
+			    	</div>
+			    </div>
+				<div *ngIf="acc.email == req.Id">
+					<div col-12 class="ContentDiv" *ngFor="let proposal of req.proposals let Q = index">
+						 <div class="title0">
+			    	      	<img src="{{provider.url+'/'+proposal.image}}" style="float: left;" class="profileImg" imageViewer/>
+			    	        <div offset-1 style="float: left;width: 70%"> {{proposal.name}}  <span class="posted" style="float: left;">{{changeDate(proposal.date)}}</span></div>
+			    	     </div>
+				    	<div class="title1">{{proposal.request}}</div>
+				    	<div *ngIf="!req.quotationId" style="text-align: right; margin-bottom: 10px; width:100%;">
+			          		<button class="sbmtReason" (click)="actionOffer(proposal, Q, 'add')"  *ngIf="!proposal.accepted" style="width: 100px;">Accept</button> 
+			          		<button class="sbmtReason" (click)="actionOffer(proposal, Q, 'remove')" *ngIf="proposal.accepted"style="width: 100px;background-color: grey">Decline</button> 
+			          	</div>
+			    	</div>
+	              </div>
+			</ion-col>
+		</ion-row>
+	</ion-grid>
+
+</ion-content>

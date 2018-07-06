@@ -1,0 +1,182 @@
+
+<ion-content class="content">
+	<ion-grid class="containerx" >
+		<ion-row col-12 style="padding: 0px; margin: 0px;">
+			<ion-col class="container container0" col-12 col-md-12 col-lg-12 col-xl-10  offset-xl-1  >
+				<div id="Header" col-12 col-xl-10>
+					<div id="appName">
+
+						<button class="searchIcon menuToggle" menuToggle *ngIf="(accountInfo && logged == true)">
+				          <ion-icon style="font-size: 25px;font-weight: bold" name="menu"></ion-icon>
+				           <ion-icon *ngIf="provider.notifications > 0" class="notIcon" name="notifications"></ion-icon>
+				         </button>
+					    	<span class="appName">Swiftify</span>
+					    	<button class="searchIcon" (click)="toggleMenu()">
+					    		<ion-icon name="search"></ion-icon>
+					    	</button>
+					    	<button class="searchIcon" (click)="fetch('all', null)">
+					    		<ion-icon name="refresh"></ion-icon>
+					    	</button>
+				    </div>
+				    <div class="scrollmenu">
+				    	<span *ngFor="let item of menuItems let r = index ">
+						  <button *ngIf="item.title !== 'Log in' " col-3 col-sm-2 col-md-2 col-lg-2 col-xl-2  (click)="itemClicked(item, r, item.hide, item.show)">{{item.title}}</button>
+						  <button *ngIf="(item.title == 'Log in' && !accountInfo)" col-3 col-sm-2 col-md-2 col-lg-2 col-xl-2  (click)="itemClicked(item, r, item.hide, item.show)">{{item.title}}</button>
+						</span>
+					</div>
+			   </div>
+
+						<ion-list style="margin-top: 70px;height: 90%; overflow: hidden;overflow-y: auto;">
+							<ion-item  class="itemSearch" style="display: none;" col-12>
+					    	   <ion-searchbar col-12 showCancelButton="false" cancelButtonText='' [(ngModel)]="searchVal" color="headerColor" [(ngModel)]="search_value"   class="searchInput">
+			                     </ion-searchbar>
+						    	<button (click)="fetch(search_value)" *ngIf="search_value && search_value.trim() !== ''"  item-end class="searchIcon2">
+							      <ion-icon name="search"></ion-icon>
+							    </button>
+							    <button *ngIf="!search_value || search_value.trim() == ''" (click)="toggleMenu('refresh')" item-end class="searchIcon2">
+							      <ion-icon name="arrow-up"></ion-icon>
+							    </button>
+						    </ion-item>
+						    <div class="ContentDiv" *ngFor="let req of requests" >
+				    	      <div (click)="goToRequest(req)" class="title0">
+				    	      	<img src="{{provider.url+'/'+req.pic}}" class="profileImg" imageViewer/>
+				    	        <div > {{req.businessName}}</div>
+				    	       </div>
+						    	<div class="title" (click)="goToRequest(req)"><a href="#">{{req.title}}</a></div>
+						    	<div class="posted">Posted on {{req.postedAt}}</div><br/>
+						    	<div (click)="goToRequest(req)" class="title1">{{req.details}}</div>
+						    	<div class=" title2">
+						    		<button  (click)="implictSearch(tag)" *ngFor="let tag of req.searchTags" >{{tag}}</button>
+						    	</div>
+						    	<div (click)="goToRequest(req)" class="title3">
+						    		<span>Proposals submitted: {{req.props}}</span>
+						    		<button>
+						    			<ion-icon name="pin"></ion-icon>
+						    			{{req.location}}
+						    		</button>
+						    	</div>
+						    </div>
+						    <div class="colHeight">
+						     <div  *ngIf="requests.length == 0" class="warn">
+							    <span style="color:grey;font-size:30px;">Oops!!</span><br/>
+							     <span style="color:grey;font-size:13px;">There are no any
+							    requests at the moment</span>
+							</div>
+						</div>
+						</ion-list>
+			</ion-col>
+			<ion-col  style="display:none;background-image: url('assets/imgs/bg.jpg');overflow: hidden;padding: 0px;overflow-y: auto; " class="container2 colHeight" col-12 col-md-9 col-lg-9 col-xl-9  offset-lg-1 offset-md-1>
+				<div style="height:100%;background-color: rgba(0,0,0,0.3)">
+					<div class="swiffty">
+						<button (click)="hideShow('container2', 'container0')" class="backArrow">
+							<ion-icon name="arrow-back"></ion-icon>
+						</button>
+						<div class="welcomeNote warn">
+							<div id="welcome">Welcome</div>
+							<button (click)="hideShow('welcomeNote', 'loginDiv')" [disabled] ="!terms" class="logBtn">Log in</button>
+								<ion-item no-lines id="termsAndConditions">
+							      <ion-label>Agree to our Terms of service</ion-label>
+							      <ion-checkbox [(ngModel)]="terms"></ion-checkbox>
+							   </ion-item>
+						</div>
+						<ion-list class="loginDiv warn" style="display:none;">
+							<ion-item no-lines class="loginText">Log in</ion-item>
+							<ion-item *ngFor="let button of inputs[0] let y = index" no-lines class="input">
+								<ion-label stacked style="color: white; font-size:15px;margin-left: 10%; font-family: sans-serif;"> {{button.title}}
+									<span class="errorMessage" *ngIf="y == 0 && errorEmail1">*{{errorEmail1}}</span>
+									<span class="errorMessage" *ngIf="y == 1 && errorPass">*{{errorPass}}</span>
+								</ion-label>
+								<ion-input type="{{button.type}}" (keyup)="inputKey1(y)"   [(ngModel)]=button.ngBind></ion-input>
+							</ion-item>
+
+							<div style="text-align: center;margin-top:15px;">
+								<div><button class="logBtn" style="width:200px;"
+									[disabled]="(inputs[0][0].ngBind.trim() == '' || inputs[0][1].ngBind.trim() == '')"
+									(click)="indexAction({module: 'logIn', credentials: [inputs[0][0].ngBind, inputs[0][1].ngBind]})">{{submitButtons[1].title}}</button></div>
+								<button class="logBtn" (click)="hideShow('loginDiv', 'verifDiv1')" style="background-color: transparent;margin-top: 15px;">{{submitButtons[3].title}}</button>
+								<button class="logBtn" (click)="hideShow('loginDiv', 'signUpDiv')" style="background-color: transparent; font-size:17px;margin-top: 10px;">{{submitButtons[4].title}}</button>
+							</div>
+						</ion-list>
+						<ion-list class="signUpDiv warn" style="display:none">
+							<ion-item no-lines class="loginText">Sign up</ion-item>
+							<ion-item *ngFor="let button of inputs[1] let z = index" no-lines class="input">
+								<ion-label stacked style="color: white; font-size:15px;margin-left: 10%; font-family: sans-serif;"> {{button.title}} <span class="errorMessage" *ngIf="z == 2 && errorEmail">*{{errorEmail}}</span></ion-label>
+								<ion-input (keyup)="inputKey(z)" type="{{button.type}}"  [(ngModel)]=button.ngBind></ion-input>
+							</ion-item>
+							<div style="text-align: center;margin-top:15px;">
+								<button 
+			                       [disabled]="(inputs[1][0].ngBind.trim() == '' ||inputs[1][1].ngBind.trim() == '' || inputs[1][2].ngBind.trim() == ''|| inputs[1][3].ngBind.trim() == '')"
+								class="logBtn" style="width:200px;" (click)="indexAction({module: 'signUP', credentials: [inputs[1][0].ngBind, inputs[1][1].ngBind, inputs[1][2].ngBind, inputs[1][3].ngBind] })">{{submitButtons[2].title}}</button><br/>
+								<button class="logBtn" (click)="hideShow('signUpDiv', 'loginDiv')" style="background-color: transparent; font-size:17px;margin-top: 20px;">{{submitButtons[5].title}}</button>
+							</div>
+						</ion-list>
+						<ion-list class="verifDiv warn" style="display:none;">
+							<ion-item no-lines class="loginText">Verifying Account</ion-item>
+							<ion-item *ngFor="let button of inputs[2] let y = index" no-lines class="input">
+								<ion-label stacked style="color: white; font-size:15px;margin-left: 10%; font-family: sans-serif;"> {{button.title}}
+									<span class="errorMessage" *ngIf="verError">* Invalid verification code</span>
+								</ion-label>
+								<ion-input type="tel" (keyup)="inputKey2()"  maxlength="6" [(ngModel)]=button.ngBind></ion-input>
+							</ion-item>
+							<div style="text-align: center;margin-top:15px;">
+								<div><button class="logBtn" (click)="verify(inputs[2][0].ngBind)" style="width:200px;"
+									[disabled]="(inputs[2][0].ngBind.trim() == '')">{{submitButtons[7].title}}</button></div>
+								<button class="logBtn" (click)="hideShow('verifDiv', 'loginDiv')" style="background-color: transparent; font-size:17px;margin-top: 10px;">{{submitButtons[6].title}}</button>
+							</div>
+						</ion-list>
+						<ion-list class="verifDiv1 warn" style="display: none;">
+							<ion-item no-lines class="loginText">Password reset</ion-item>
+							<div class="part1">
+								<ion-item  no-lines class="input">
+									<ion-label stacked style="color: white; font-size:15px;margin-left: 10%; font-family: sans-serif;"> Enter your email
+										<span class="errorMessage" *ngIf="emailPassErr">* {{emailPassErr}}</span>
+									</ion-label>
+									<ion-input type="email" (focus)="hideError()" (keyup)="inputKey2()" [(ngModel)]="emailPass" ></ion-input>
+								</ion-item>
+								<div style="text-align: center;margin-top:15px;">
+										<button class="logBtn" (click)="verify2(emailPass)" style="width:200px;"
+										[disabled]="(!emailPass || emailPass.trim() == '')">Continue</button>
+							    </div>
+							</div>
+							<div class="part2">
+								<ion-item no-lines class="input">
+								<ion-label stacked style="color: white; font-size:15px; font-family: sans-serif;"> Enter verification code sent to your email
+									<span class="errorMessage" *ngIf="verError1">* Invalid verification code</span>
+									</ion-label>
+									<ion-input type="tel" (keyup)="inputKey2()"  maxlength="6" [(ngModel)]="verifCode"></ion-input>
+								</ion-item>
+								<div style="text-align: center;margin-top:15px;">
+									<button class="logBtn" (click)="verify1(verifCode)" style="width:200px;"
+										[disabled]="(!verifCode || verifCode.trim() == '')">Continue</button>
+								</div>
+							</div>
+							<div class="part3">
+								<ion-item no-lines class="input">
+								<ion-label stacked style="color: white; font-size:15px;margin-left: 10%; font-family: sans-serif;"> New password
+									</ion-label>
+									<ion-input type="password" (keyup)="inputKey2()"   [(ngModel)]="newPass"></ion-input>
+								</ion-item>
+								<ion-item no-lines class="input">
+								<ion-label stacked style="color: white; font-size:15px;margin-left: 10%; font-family: sans-serif;"> Confrim password
+									<span class="errorMessage verError1" >* Passwords do not match</span>
+									</ion-label>
+									<ion-input type="password" (keyup)="inputKey2()" (focus)="hideError()"  [(ngModel)]="confPass"></ion-input>
+								</ion-item>
+								<div style="text-align: center;margin-top:15px;">
+									<button class="logBtn" (click)="resetPass(newPass, confPass)" style="width:200px;"
+										[disabled]="(!newPass || newPass.trim() == '' || !confPass || confPass.trim() == '')">Reset password</button>
+								</div>
+							</div>
+							<div style="text-align: center;">
+								<button class="logBtn" (click)="hideShow('verifDiv1', 'loginDiv')" style="background-color: transparent; font-size:17px;margin-top: 10px;">{{submitButtons[6].title}}</button>
+							</div>
+						</ion-list>
+					</div>
+				</div>
+			</ion-col>
+			<ion-col class="container"></ion-col>
+			<ion-col class="container"></ion-col>
+		</ion-row>
+	</ion-grid>
+ 
+</ion-content>
