@@ -75,8 +75,8 @@
 						</span>
 					</div>
 				</div>
-				<div style="width: 100%;">
-	        	  <span style="float:right;margin-right: 20%; font-family: arial">
+				<div style="width: 100%;" col-lg-8>
+	        	  <span style="float:right; margin-right: 50px; font-family: arial">
 					  <button  style="border: 1px solid lightgrey;text-align: left;background-color: transparent;font-size:15px; width:100px;color:black"  >
 					  	Total Value
 					   </button>
@@ -124,7 +124,7 @@
  						<ion-label>Other deliveries</ion-label>
  						<ion-select [(ngModel)]="del" (ionChange)="deliveryChange(del)">
  							<ion-option selected value="New">New Delivery</ion-option>
- 							<ion-option  *ngFor="let delivery of deliveryNote.delivers let inx = index" value="{{inx}}">{{delivery.date}}</ion-option>
+ 							<ion-option  *ngFor="let delivery of deliveryNote.delivers let inx = index" value="{{delivery.date}}">{{delivery.date}}</ion-option>
  						</ion-select>
  					</ion-item>
  				</div>
@@ -165,7 +165,7 @@
 				          	</ion-item>
 			      		   	</div>
 		      		</div>
-		      		<div *ngIf="deliveryNote.to.email !== acc.email" style="text-align: center; margin-top: 10px;margin-bottom: 10px; width:100%;">
+		      		<div *ngIf="deliveryNote.to.email !== acc.email" class="sbmtQt">
 		          		<button (click)="makedeliveryNote1()" class="sbmtReason">Submit</button> 
 		          	</div>
        </div>
@@ -266,21 +266,20 @@
 		 		<div *ngIf="!receipt" class="Pay">Date: <span class="value">{{todayDate()}}</span></div>
 		 		<div *ngIf="receipt && receipt.dateCreated" class="Pay">Date: <span class="value">{{provider.changeDate(receipt.dateCreated)}}</span></div>
 		 		<div *ngIf="receipt" style="text-align: center;">
-			 		<div padding style="font-size: 16px; color:grey; margin-top: 10px; margin-bottom: 10px;">
+			 		<!--<div padding style="font-size: 16px; color:grey; margin-top: 10px; margin-bottom: 10px;">
 			 				Transaction Id:  <span class="value">KSDFJGKSDFKGSJDFGSDF.</span>
-			 		</div>
-			 		<span *ngIf="!receipt.confirmed && invoicedata.creator == acc.email" class="sbmtReason" style="background-color: lightgrey; color: black">Awaiting confirmation</span> 
-			 		<span *ngIf="receipt.confirmed" class="sbmtReason" style="background-color: lightgreen; color: black">Payment confirmed</span> 
+			 		</div>-->
+			 		<span *ngIf="receipt.confirmed == false && invoicedata.creator == acc.email" class="sbmtReason" style="background-color: lightgrey; color: black">Awaiting confirmation</span> 
+			 		<span *ngIf="receipt.confirmed == true" class="sbmtReason" style="background-color: lightgreen; color: black">Payment confirmed</span> 
 			 	</div>
 			 	<div *ngIf="receipt">
-			 		<div *ngIf="!receipt.confirmed && invoicedata.creator !== acc.email" style="text-align: center; margin-top: 20px; width:100%;">
+			 		<div *ngIf="receipt.confirmed  == false && invoicedata.creator !== acc.email" style="text-align: center; margin-top: 20px; width:100%;">
 		          		<button (click)="confirmPayment()" class="sbmtReason">Confirm payment</button> 
 		          	</div>
-		          	<div *ngIf="!receipt && invoicedata.creator == acc.email " style="text-align: center; margin-top: 20px; width:100%;">
-		          		<button (click)="makePayment()" ion-button class="sbmtReason" style="color: white">Make payment</button> 
-		          	</div>
 	             </div>
-
+	             <div *ngIf="!receipt && invoicedata.creator == acc.email " style="text-align: center; margin-top: 20px; width:100%;">
+		          		<button (click)="makePayment()" ion-button class="sbmtReason" style="color: white">Make payment</button> 
+	          	</div>
            </div>
  
 	 </ion-grid>

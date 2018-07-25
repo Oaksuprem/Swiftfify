@@ -26,7 +26,7 @@
 								<li style="font-weight:bold">To </li>
 								<div *ngIf="!from || from.email == acc.email">
 									<div style="padding-left: 10px;font-size:14px" *ngFor="let to of tos">
-										<li>Supplier's name <span class="info">{{to.name}}</span></li>
+										<li (click)="showDets(to.id)">Supplier's name <span class="info">{{to.name}}</span></li>
 										<li>Email <span class="info">{{to.id}}</span></li>
 								    </div>
 								</div>
@@ -52,7 +52,6 @@
 								<span style="font-weight:bold">Note: </span><br/>
 								<ol style="list-style-type: lower-alpha;">
 									<li>THIS IS AN ORDER. Read the conditions and instructions before quoting.</li>
-									<li>This quotation should be submitted not later than 9.30 a.m on 30<sup>th</sup> March, 2018</li>
 									<li>Your quotation should indicate final unit price which includes all costs for delivery, discount, duty and sales tax.</li>
 								</ol>
 								<button (click)="toggleIntr()" class="readInstr">Read conditions and instructions here</button>
@@ -104,20 +103,20 @@
 							 <button (click)="addItem()" class="addItem">Add item</button>
 						</div>
 						<div  *ngIf="from && from.email !== acc.email && !quoted" style="text-align: center; margin-top: 10px; width:100%;">
-			          		<button  (click)="makeQuotation()" class="sbmtReason">Submit</button> 
+			          		<button  (click)="makeQuotation(from.businessName)" class="sbmtReason reason">Submit</button> 
 			          	</div>
 			          </ion-row>
 			           <div *ngIf="from && from.email !== acc.email && !quoted" style="text-align: center;width: 100%; margin-bottom: 10px; margin-top: 5px">
-				            <span class="quoting" style="color: #750481">If you do not want to quote, click  <button class="No" (click)="continue('No')" >Here</button></span>
-				             <span class="notQuoting" style="display:none;color: #750481">If you would like to quote, click  <button class="Yes" (click)="continue('Yes')" >Here</button></span>
+				            <span class="quoting reason" style="color: #750481">If you do not want to quote, click  <button class="No" (click)="continue('No')" >Here</button></span>
+				             <span class="notQuoting reason" style="display:none;color: #750481">If you would like to quote, click  <button class="Yes" (click)="continue('Yes')" >Here</button></span>
 				        </div>
 			          <ion-row  offset-lg-1 col-lg-11 offset-md-1 col-md-11  id="notQuoting" style="display:none;margin-top: 15px;font-size:16px; font-weight:bold;padding-left:20px">
 			          	<span style="color: grey">If you do not wish to quote, Please endorse the reason int the input field below</span><br/>
-			          	<textarea col-11 class="textarea">
+			          	<textarea col-11 class="textarea" [(ngModel)] = 'reason'>
 			          	</textarea>
 			          	<br/>
 			          	<div  style="text-align: center; margin-top: 10px; width:100%;">
-			          		<button  class="sbmtReason">Submit</button> 
+			          		<button (click)="notQuot(reason)" [disabled]="!reason || reason.trim() == ''"  class="sbmtReason reason">Submit</button> 
 			          	</div>
 			          	
 			          </ion-row>
@@ -131,9 +130,9 @@
 			          		   			<span>Name</span>
 			          		   			<span style="float: right; margin-right: 20%">Designation</span>
 			          		   		</div>
-				          		   	<li *ngFor="let approver of approvers">
-				          		   		<input class="input2" [(ngModel)]=approver.name type="text">
-				          		   		<input  class="input2" [(ngModel)]=approver.designation offset-md-3 offset-lg-3 type="text" >
+				          		   	<li  *ngFor="let approver of approvers">
+				          		   		<input class="input2 designations" [(ngModel)]=approver.name type="text">
+				          		   		<input  class="input2 designations" [(ngModel)]=approver.designation offset-md-3 offset-lg-3 type="text" >
 				          		   	</li>
 			          		   		<div *ngIf="!quotationInfo"  style="text-align: center; margin-top: 20px; width:100%;">
 						          		<button (click)="saveQuotation()"  class="sbmtReason">Submit</button> 
@@ -181,7 +180,7 @@
       <div *ngIf="doc == 'lpo'">
       	<ion-row *ngFor="let bider of biderSelections let indx = index">
       		<div style="float: right; width:100%; margin-top: 15px; padding-right: 20px">
-      			<input type="text" [(ngModel)]=data[3] id="inputSerial"/>
+      			<input type="text" [(ngModel)]=data[3] class="inputSerial"/>
       			<span style="float: right; font-size: 14px; color: grey;">Serial No. </span>
 
       		</div>

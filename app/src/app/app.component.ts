@@ -36,6 +36,9 @@ export class MyApp {
         this.provider.toast('Your profile has been updated.', null);
          $('.updateInpts').slideUp(300);
         this.accountInfo = data.user;
+        if(this.accountInfo.address){
+              this.provider.acc.address = this.accountInfo.address;
+        }
         this.storage.remove('swiftifyVariables');
         this.storage.set('swiftifyVariables', JSON.stringify(this.accountInfo)).catch(function(err){
         if(err)
@@ -45,7 +48,6 @@ export class MyApp {
        this.manipulateData()
       }else if (data.submodule == 'changePic'){
       this.provider.profilePic == data.pic;
-      alert(this.provider.profilePic);
     }
     })
   }

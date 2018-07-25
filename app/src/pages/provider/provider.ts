@@ -18,25 +18,32 @@ export class ProviderPage {
    imgUpload: any;
    profilePic: any;
    notifications: number;
-   url: string = 'http://192.168.1.102:3000/';
+   supplier: any;
+   url: string = 'http://192.168.43.136:3000/';
   constructor(private transfer: FileTransfer,
     private camera: Camera,private storage: Storage, public socket: Socket, public loadCtrl: LoadingController, public actionCtrl: ActionSheetController,  public toastCtrl: ToastController, public events: Events) {
    
   this.socketResponse().subscribe(data =>{
         let datam:any = data;
           var module = datam.module;
+
           if(module == 'notification'){
               switch (datam.submodule) {
               	case "fetch":
               		this.notifications = datam.number;
               		 this.profilePic = this.url+'/'+datam.pic;
+              		  this.supplier = datam.supplierStatus;
               		  this.acc.pic = datam.pic;
-                        this.storage.set('swiftifyVariables', JSON.stringify(this.acc)).catch(function (err) {
+                       this.storage.set('swiftifyVariables', JSON.stringify(this.acc)).catch(function (err) {
                      });
               		break;
           		case 'newNote':
-	          		if(datam.note.toId == this.acc.businessName){
+          		    var xr = datam.tos.findIndex(q => q ==  this.acc.businessName );
+	          		if(xr > -1){
 	              		  this.notifications +=1;
+	              		  if(datam.status){
+	              		  	this.supplier.status = datam.status;
+	              		  }
 	          		}
               		break;
               	default:
@@ -61,7 +68,6 @@ export class ProviderPage {
             if(val){
                 this.acc = JSON.parse(val);
                 this.profilePic = this.url +'/'+this.acc.pic;
-                console.log(this.profilePic);
                 this.socketRequest({
                 	module: 'notification',
                 	action: 'fetch',
@@ -129,7 +135,6 @@ export class ProviderPage {
 					      text: 'Cancel',
 					      role: 'cancel',
 					      handler: () => {
-					        console.log('Cancel clicked');
 					      }
 					    }
 					    
@@ -208,7 +213,7 @@ export class ProviderPage {
 		                  this.toast('Profile updated', 'middle');
 		                         vals.pic = string[1];
 		                         this.profilePic = this.url+''+vals.pic;
-		                         this.acc .pic = vals.pic;
+		                         this.acc.pic = vals.pic;
 		                        this.storage.set('swiftifyVariables', JSON.stringify(vals)).catch(function (err) {
 		                     });
 		                  });
@@ -218,5 +223,45 @@ export class ProviderPage {
 	            this.toast('Photo could not be uploaded', 'middle');
 	        });
 	   }
-  
+   upload(doc){
+   	  const options: CameraOptions = {
+	                   destinationType: this.camera.DestinationType.DATA_URL,
+	                   encodingType: this.camera.EncodingType.JPEG,
+	                   sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+		               allowEdit: true,
+		               correctOrientation: true,
+	                    }
+	                      this.camera.getPicture(options).then((imageData) => {
+	                            this.imgUpload = 'data:image/jpeg;base64,' + imageData;
+		                           this.upldImage1(doc);
+	                      }, (err) => {
+	               });
+
+
+   }
+   upldImage1(doc){
+   	 const fileTransfer: FileTransferObject = this.transfer.create();
+	        let options: FileUploadOptions = {
+	          fileKey: 'swiftify',
+	          fileName: 'swiftify',
+	          chunkedMode: false,
+	          mimeType: "image/jpeg",
+	          headers: {},
+	          params: {
+	          		action: 'doc',
+                    userId: this.acc.businessName,
+                    doc: doc
+	            }
+	          }
+	    fileTransfer.upload(this.imgUpload, this.url+'imageUpload',  options)
+	          .then((data) => {
+	            let datx:any = data.response;
+	            if(datx == 2){
+	            	this.supplier.status = 'pending';
+	            }
+	            this.toast('document has been uploaded', 'bottom');
+	        }, (err) => {
+	            this.toast('Photo could not be uploaded', 'middle');
+	        });
+   }
 }

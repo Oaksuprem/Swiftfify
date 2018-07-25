@@ -5,17 +5,20 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { ProviderPage } from '../provider/provider';
 import { Storage } from '@ionic/storage';
 import { OfferPage } from '../offer/offer';
+import { TermPage } from '../term/term';
+import { AdminPage } from '../admin/admin';
+import { Platform, Nav } from 'ionic-angular';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
-   menuItems: any = [{title:'Requests'}, 
-    				 {title: 'Products'},
+   menuItems: any = [ 
+             {title: 'Home', hide: 'containery', show: 'container3'},
+    				 {title: 'Requests', hide: 'containery', show: 'container4'},
     				 {title: 'Log in', hide: 'container', show: 'container2'},
-    				 {title: 'Contact us'},
-    				 {title: 'About'}
+    				 {title: 'About', hide: 'containery', show: 'container5'},
     				 ];
    inputs: any = [];
    search_value: string;
@@ -41,7 +44,7 @@ export class HomePage {
    code: any;
    verError1: boolean;
    logged: boolean = false;
-  constructor(private events: Events, private storage: Storage, public provider: ProviderPage, public navCtrl: NavController, private statusBar: StatusBar) {
+  constructor(public plt: Platform, private events: Events, private storage: Storage, public provider: ProviderPage, public navCtrl: NavController, private statusBar: StatusBar) {
   	  this.provider.makeInfo();
       $(document).ready(function(){
         var height = $('.colHeight').css('height');
@@ -89,7 +92,7 @@ export class HomePage {
        case 'newsaved':
        var indx = this.requests.findIndex(r => r.dateCreated == data.id);
             if(indx > -1){
-              this.requests[indx] = data.info.id;
+              this.requests[indx].quotationId = data.info.id;
             }
             break;
           }
@@ -165,6 +168,12 @@ export class HomePage {
           }
       })
   }
+  goToAdmin(){
+    this.navCtrl.push(AdminPage);
+  }
+  terms(){
+    this.navCtrl.push(TermPage);
+  }
   changeDate(date){
      var dateString:any = new Date(date);
         dateString = dateString.toString();
@@ -182,6 +191,7 @@ export class HomePage {
       })
     this.logged = true;
      this.hideShow('container2', 'container0');
+     this.provider. makeInfo();
      this.provider.toast('You are now logged in.', null)
      this.events.publish('app', {
        submodule: 'loggedIn',
@@ -229,6 +239,7 @@ export class HomePage {
   }
   inputKey2(){
     this.verError = undefined
+    this.verError1 = undefined;
   }
   verify(data){
       this.verError = undefined;
@@ -244,6 +255,8 @@ export class HomePage {
     }
   }
   ionViewDidLoad(){
+    $('.container3').show();
+     $('.searchIconx').hide();
     this.storage.ready().then(()=>{
           this.storage.get('swiftifyVariables').then((val)=>{
               this.accountInfo = JSON.parse(val);
@@ -278,7 +291,7 @@ export class HomePage {
     })
   }
   implictSearch(tag){
-    $('.itemSearch').slideDown();
+    $('.itemSearch').show();
     this.search_value = tag;
     this.fetch(tag, null);
   }
@@ -286,7 +299,7 @@ export class HomePage {
       if(item){
        this.fetch('all', 'no');
       }
-      $('.itemSearch').slideToggle();
+      $('.itemSearch').toggle();
     }
     hideError(){
       this.emailPassErr = undefined;
@@ -294,11 +307,16 @@ export class HomePage {
 
     }
   itemClicked(item, index, hide, show){
+       if(item.title == 'Requests'){
+         $('.searchIconx').show()
+       }else{
+         $('.searchIconx').hide();
+       }
   		$('.scrollmenu button').css('borderBottom', 'none');
-      	$('.scrollmenu button').eq(index).css('borderBottom', '2px solid #750481');
+      	$('#btn'+index+'').css('borderBottom', '2px solid white');
+
       this.hideShow(hide, show)	
       if(index == 2){
-
 	  	$('.homePage').fadeOut(600);
         this.statusBar.hide();
       }

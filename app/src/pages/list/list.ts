@@ -6,6 +6,7 @@ import { ProviderPage } from '../provider/provider';
 import { OfferPage } from '../offer/offer';
 import { DocsPage } from '../docs/docs';
 import { ClientDocsPage } from  '../client-docs/client-docs';
+import { NotifyPage } from '../notify/notify';
 
 @IonicPage()
 @Component({
@@ -14,12 +15,13 @@ import { ClientDocsPage } from  '../client-docs/client-docs';
 })
 export class ListPage {
    docs = [];
-   doc: string;
+   docx: string;
    acc: any;
    type: string;
+   searchVal: string;
   constructor(private provider: ProviderPage, public navCtrl: NavController, public navParams: NavParams) {
   	this.acc = this.navParams.get('acc');
-  	this.doc = this.navParams.get('doc');
+  	this.docx = this.navParams.get('doc');
     $(document).ready(function(){
   		var height = $('.colHeight').css('height');
   		$('.colHeight').css('lineHeight',height);
@@ -45,7 +47,21 @@ export class ListPage {
                 if(ind > -1){
                   this.docs[ind].read = true;
                 }
-               this.goToRequest(data.doc, data.type);
+                switch (data.type) {
+                  case "LPOs":
+                    this.goToLPO(data.doc);
+                    break;
+                  case "Invoices":
+                    this.goToInvoice(data.doc);
+                  break;
+                  case "Notes":
+                  this.navCtrl.push(NotifyPage, {data: data.doc});
+                  break;
+                  default:
+                    this.goToRequest(data.doc, data.type);
+                    break;
+                }
+              
           }
         })
   }
@@ -69,13 +85,61 @@ export class ListPage {
          break;
      }
   }
-  goTo(doc){
+
+  toggleSearch(btn){
+    switch (btn) {
+      case "searchIcon":
+       $('#searchPosition').toggle();
+        break;
+
+      case "backArrow":
+       $('#searchPosition').hide();
+        $('.docs').show();
+         this.searchVal = '';
+        break;
+
+        case "close":
+         this.searchVal = '';
+          $('.docs').show();
+        break;
+    
+    }
+  }
+  
+  search(val){
+    var index;
+    if(val && val.trim() !==''){
+    $('.docs').hide();
+    let thisx = this;
+     this.docs.map(function(x){
+       if(thisx.docx == 'Receipts' && thisx.provider.acc.businessName !== x.to.name)
+         index = x.to.name.toLowerCase().indexOf(val.toLowerCase());
+       else if(thisx.docx == 'DeliveryNotes' || thisx.docx == 'InspectionCertificates')
+         index = x.from.businessName.toLowerCase().indexOf(val.toLowerCase());
+       else if(thisx.docx =='Offers')
+         index = x.businessName.toLowerCase().indexOf(val.toLowerCase());
+       else if(thisx.docx =='Quotations')
+         index = x.title.toLowerCase().indexOf(val.toLowerCase());
+       else
+         index = x.from.name.toLowerCase().indexOf(val.toLowerCase());
+          if(index > -1 ){
+             $('#'+x.dateCreated+'').show();
+          }
+     })
+   }else{
+      $('.docs').show();
+   }
+  }
+  goTo(doc, index){
+    var serial = doc.serial;
+    this.docs[index].read = true;
        this.provider.socketRequest({
          module: 'fetchDocument',
          item: doc.doc,
-         serial: doc.serial,
+         serial: serial,
          date: doc.dateCreated,
-         businessName: this.acc.businessName
+         businessName: this.acc.businessName,
+         toId: doc.from.name
        })
   }
   goToLPO(doc){
@@ -89,15 +153,19 @@ export class ListPage {
   ionViewDidLoad(){
     this.provider.socketRequest({
       module: 'fetchDocs',
-      type: this.doc,
+      type: this.docx,
       email: this.acc.email,
       id: this.acc.businessName
     })
   }
 
   createDoc(){
-  	if(this.doc == 'Quotations'){
+  	if(this.docx == 'Quotations'){
+      if(this.provider.acc.address){
   	   this.navCtrl.push(RequestPage, {acc: this.acc});
+      }else{
+        alert('You need to update your address');
+      }
   	}
   }
 

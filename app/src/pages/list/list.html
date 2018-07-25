@@ -2,8 +2,11 @@
 <ion-header>
   <ion-navbar color="headerColor">
      <div id="header">
-     	<span>{{doc}}</span>
-     	<button *ngIf="doc == 'Quotations' " (click)="createDoc()">Create</button>
+     	<span>{{docx}}</span>
+     	<button *ngIf="docx == 'Quotations' " (click)="createDoc()">Create</button>
+     	<button *ngIf="docs.length > 1  && type !='Notifications'" class="searchIcon" (click)="toggleSearch('searchIcon')">
+    		<ion-icon name="search"></ion-icon>
+    	</button>
      </div>
   </ion-navbar>
 
@@ -12,16 +15,55 @@
 
 <ion-content  style="background-color: white" >
 	<ion-grid style="margin:0px;padding:0px;height:100%">
+		<ion-row id="searchPosition">
+			<ion-col>
+				<div class="search">
+					<button (click)="toggleSearch('backArrow')">
+						<ion-icon name="arrow-back"></ion-icon>
+					</button>
+					<div id="input">
+						<input placeholder="Search" type="text" [(ngModel)]="searchVal" (keyup)="search(searchVal)">
+						<button (click)="toggleSearch('close')">
+							<ion-icon name="close"></ion-icon>
+						</button>
+					</div>
+				</div>
+		   </ion-col>
+		</ion-row>
 		<ion-row style="height:100%;">
+			
 			<ion-col style="margin:0px;padding:0px;" class="colHeight">
 			    <div  *ngIf="docs.length == 0" class="warn">
 				    <span style="color:grey;font-size:30px;">Oops!!</span><br/>
 				     <span style="color:grey;font-size:13px;">You don't have any 
-				    {{doc}} at the moment</span>
+				    {{docx}} at the moment</span>
 				</div>
 				<ion-list class="list" *ngIf="docs.length !== 0">
-					<div *ngFor="let doc of docs" >
-						<ion-item *ngIf="type !== 'LPOs' && type !== 'Invoices' && type !='Notifications' "  (click)="goToRequest(doc, type)">
+					<div *ngFor="let doc of docs let q = index" >
+						<ion-item *ngIf="type !== 'LPOs' && type !== 'Invoices' && type !='Notifications' "  (click)="goToRequest(doc, type)" id="{{doc.dateCreated}}" class="docs">
+								<div class="userImg">
+									<img *ngIf="docx !== 'Receipts' && docx !=='Quotations'  && docx !=='Offers' && docx !== 'DeliveryNotes' && docx !== 'InspectionCertificates'"  src="{{provider.url+'/'+doc.from.pic}}">
+									<img *ngIf="docx == 'Receipts' &&( provider.acc.businessName !== doc.to.name || !doc.from.pic) "  src="{{provider.url+'/'+doc.to.pic}}">
+									<img *ngIf="docx == 'Receipts' && provider.acc.businessName == doc.to.name && doc.from.pic"  src="{{provider.url+'/'+doc.from.pic}}">
+									<img *ngIf="docx =='Offers' || docx =='Quotations' " src="{{provider.url+'/'+doc.pic}}">
+								</div>
+								<div class="details">
+									<span *ngIf="docx !== 'Receipts' && docx !=='Quotations'  && docx 	!=='Offers'" class="name">{{doc.from.name}}</span>
+									<span *ngIf="docx == 'Receipts' && provider.acc.businessName !== doc.to.name" class="name">{{doc.to.name}}</span>
+									<span *ngIf="docx == 'Receipts' && provider.acc.businessName == doc.to.name" class="name">{{doc.from.name}}</span>
+									<span *ngIf="docx == 'DeliveryNotes' || docx == 'InspectionCertificates'" class="name">{{doc.from.businessName}}</span>
+									<span *ngIf="docx =='Quotations'  || docx =='Offers'"     class="name">{{doc.businessName}}</span>
+									<span class="time">{{provider.changeDate(doc.dateCreated)}}</span>
+									<br/>
+									<div class="text" style="font-size: 11px;">
+										Id: {{doc.dateCreated}}
+										<div style="font-size: 13px;" *ngIf="doc.title">
+											{{doc.title}}
+										</div>
+									</div>
+								</div>
+						</ion-item>
+						<ion-item  *ngIf="type =='Notifications' && doc.read ==false "  (click)="goTo(doc, q)" class="notify docs" id="{{doc.dateCreated}}">
 								<div class="userImg">
 									<img src="{{provider.url+'/'+doc.from.pic}}">
 								</div>
@@ -33,7 +75,7 @@
 									</div>
 								</div>
 						</ion-item>
-						<ion-item  *ngIf="type =='Notifications' && doc.read ==false "  (click)="goTo(doc)" class="notify" >
+						<ion-item  *ngIf="type =='Notifications'  && doc.read == true "  (click)="goTo(doc, q)" class="docs" id="{{doc.dateCreated}}">
 								<div class="userImg">
 									<img src="{{provider.url+'/'+doc.from.pic}}">
 								</div>
@@ -45,27 +87,30 @@
 									</div>
 								</div>
 						</ion-item>
-						<ion-item  *ngIf="type =='Notifications'  && doc.read == true "  (click)="goTo(doc)">
-								<div class="userImg">
-									<img src="{{provider.url+'/'+doc.from.pic}}">
-								</div>
-								<div class="details">
-									<span class="name">{{doc.from.name}}</span>
-									<span class="time">{{provider.changeDate(doc.dateCreated)}}</span>
-									<div class="text">
-										{{doc.note}}
-									</div>
-								</div>
-						</ion-item>
-					<ion-item *ngIf="type == 'LPOs' "  (click)="goToLPO(doc)">
-						<div class="att">Serial No. <span  class="value">{{doc.serial}}</span></div>
-						<div class="att">Created on <span  class="value">{{doc.info[0].dor}}</span></div>
+					<ion-item *ngIf="type == 'LPOs' "  (click)="goToLPO(doc)" class="docs" id="{{doc.dateCreated}}">
+						<div class="userImg">
+							<img src="{{provider.url+'/'+doc.from.pic}}">
+						</div>
+						<div class="details">
+							<span class="name">{{doc.from.name}}</span>
+							<span class="time">{{doc.info[0].dor}}</span>
+							<div class="text" style="font-size: 11px;">
+								Id: {{doc.serial}}
+							</div>
+						</div>
 					</ion-item>
-					<ion-item *ngIf="type == 'Invoices' "  (click)="goToInvoice(doc)">
-						<div class="att">Serial No. <span  class="value">{{doc.serial}}</span></div>
-						<div class="att">Created on <span  class="value">{{provider.changeDate(doc.dateCreated)}}</span></div>
+					<ion-item *ngIf="type == 'Invoices' "  (click)="goToInvoice(doc)" class="docs" id="{{doc.dateCreated}}">
+						<div class="userImg">
+							<img src="{{provider.url+'/'+doc.from.pic}}">
+						</div>
+						<div class="details">
+							<span class="name">{{doc.from.name}}</span>
+							<span class="time">{{provider.changeDate(doc.dateCreated)}}</span>
+							<div class="text" style="font-size: 11px;">
+								Id: {{doc.serial}}
+							</div>
+						</div>
 					</ion-item>
-
 				</div>
 				</ion-list>
 		    </ion-col>

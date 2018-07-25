@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { ProviderPage } from '../provider/provider';
+import * as $ from 'jquery';
 
 @IonicPage()
 @Component({
@@ -29,7 +30,7 @@ export class ClientDocsPage {
    del:boolean;
    ins: any;
   constructor(private provider:ProviderPage, public navCtrl: NavController, public navParams: NavParams) {
-      
+
      this.data = this.navParams.get('data');
      this.doc = this.data[0];
      if(this.data[1] == 'fetchInvoice'){
@@ -107,9 +108,14 @@ export class ClientDocsPage {
           break;
           case 'updatedDelivery':
            this.provider.toast("Your delivery has been saved", 'middle');
-           if(!this.deliveryNote.delivers){
-              this.deliveryNote.delivers = [data.del]
-           }else{
+           if(!this.deliveryNote){
+              this.deliveryNote = {
+                delivers: [data.del]
+              }
+           }else if(!this.deliveryNote.delivers){
+                  this.deliveryNote.delivers = [data.del];
+           }
+           else{
               this.deliveryNote.delivers.push(data.del);
            }
             this.change();
@@ -147,11 +153,19 @@ export class ClientDocsPage {
           this.provider.toast('Receipt has been sent', 'middle');
           this.receipt = data.receipt;
           break;
+          case 'getDeliery':
+          this.deliveryNote.newDel = data.doc[0];
+          break;
       }
 
     })
    
 
+  }
+   ionViewDidLeave() {
+     if(this.navCtrl.getActive().name == 'ClientDocsPage'){
+       this.provider.events.unsubscribe('invoice');
+    }
   }
   change(){
     let iq = this.deliveryNote.delivers[this.deliveryNote.delivers.length-1].items
@@ -167,14 +181,19 @@ export class ClientDocsPage {
                delivered: false
            }
       this.newDel = this.deliveryNote.newDel;
-
   }
    sendInvoice(){
+     var acc = this.provider.acc;
      this.provider.Load('show', 'Sending invoice...');
       this.provider.socketRequest({
         module: 'updateInvoice',
-        user: this.acc.email,
-        lpoId: this.data[3]
+        lpoId: this.data[3],
+        toId: this.from.businessName,
+        from: {
+            email: acc.email,
+            name: acc.businessName,
+            pic: acc.pic
+        }
       })
     }
     makedeliveryNote(items){
@@ -193,10 +212,17 @@ export class ClientDocsPage {
        }
     }
     deliveryChange(ind){
-      if(!isNaN(ind)){
-        this.deliveryNote.newDel = this.deliveryNote.delivers[ind];
-      }else{
+      if(ind == 'New'){
          this.deliveryNote.newDel = this.newDel;
+         $('.sbmtQt').show();
+      }else{
+         $('.sbmtQt').hide();
+        this.provider.socketRequest({
+               module: 'getDeliery',
+               id: ind,
+               serial: this.deliveryNote.serial,
+               dateCreated: this.deliveryNote.dateCreated
+        });
       }
     }
     itemCal(event, index){
@@ -254,11 +280,11 @@ export class ClientDocsPage {
         },
         to: {
            name: this.to.businessName,
-           email: this.to.email
+           email: this.to.email,
+           pic: this.provider.acc.pic
         },
         amount: this.bider.amount,
         serial: this.serial
-
       })
     }
  confirmPayment(){
@@ -266,7 +292,13 @@ export class ClientDocsPage {
    this.provider.socketRequest({
      module: 'updatePayment',
      serial: this.serial,
-     dateCreated: this.dateCreated
+     dateCreated: this.dateCreated,
+     toId: this.to.businessName,
+     from: {
+           name: this.provider.acc.businessName,
+           email: this.provider.acc.email,
+           pic: this.provider.acc.pic
+     }
    })
  }
  calculateDate(hours){

@@ -17,12 +17,30 @@ page-home {
     border-bottom: #fff !important;
   }
   #Header{
-  	background-color: white;
+  	background-color: colors($colors, headerColor);
   	margin:0px;
   	padding: 0px;
-  	border-bottom: 3px solid white;
+  	border-bottom: 3px solid colors($colors, headerColor);
     position: fixed;
 
+  }
+  #contact{
+    color: white;
+    padding:10px;
+    padding-left: 20px;
+    font-weight: lighter;
+    .info{
+      margin-top: 10px;
+      .value{
+        color: orange;
+        margin-left: 60px;
+      }
+    }
+  }
+  .containery{
+    height:100%;
+    padding:0px;
+    display: none;
   }
 	.container, .containerx{
 		height:100%;
@@ -236,11 +254,53 @@ page-home {
 		margin-right:20px;
 		font-size: 20px;
 	}
+  #wording{
+    max-width: 500px;
+    h3{
+      font-size: 18px;
+      font-family: cursive;
+      color: white;
+    }
+    
+  }
+  #button{
+    button{
+      background-color: transparent;
+      box-shadow:none;
+      img{
+        width:100px;
+        height:70%;
+        border-radius: 7px;
+        box-shadow: 2px 2px 1px grey;
+
+      }
+    }
+    .reqsView{
+      text-transform: none;
+      font-size: 12px;
+      color: black;
+      background-color: magenta;
+      border-radius: 10px;
+    }
+    .reqsView1{
+      background-color: orange
+    }
+  }
+  #cont{
+    background-color: rgba(0,0,0,0.3);
+    height: 100%;
+    text-align: center;
+    img{
+      height: 140px;
+      width:140px;
+    }
+  }
 	.scrollmenu {
-  	box-shadow: 2px 2px 0px lightgrey;
+  	box-shadow: 2px 2px 0px colors($colors, headerColor);
     background-color: transparent;
-    overflow: auto;
+    overflow: hidden;
     white-space: nowrap;
+    height:35px;
     margin-top: 5px;
 	    button {
 		    color: white;

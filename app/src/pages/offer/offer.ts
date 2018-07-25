@@ -67,6 +67,7 @@ export class OfferPage {
         quotation: this.req.quotationId
   	   });
   }
+  
   createDoc(){
   	if(this.selections.length > 3){
   		alert("Only up to 3 selections needed");
@@ -107,6 +108,8 @@ export class OfferPage {
    ionViewDidLeave() {
      if(this.navCtrl.getActive().name == 'OfferPage'){
        this.provider.events.unsubscribe('indexResponse');
+       this.provider.events.unsubscribe('userProposed');
+       this.provider.events.unsubscribe('quotation');
     }
   }
   changeDate(date){
@@ -118,6 +121,9 @@ export class OfferPage {
         return dateString;
   }
   sendOffer(detail){
+    if(this.provider.supplier.status =='pending'){
+      alert('You are not yet approved as a supplier')
+    }else if(this.provider.supplier.status =='approved' && this.provider.acc.address){
      this.provider.Load('show', 'Sending offer...');
      this.provider.socketRequest({
 
@@ -128,10 +134,15 @@ export class OfferPage {
 	        name: this.acc.businessName,
 	        pic: this.acc.pic,
 	        request: detail,
-	        id: this.acc.email,
-          image: this.acc.pic,
+	        id: this.provider.acc.email,
+          image: this.provider.acc.pic,
 	        date: Date.now()
      	}
      })
+   }else if(!this.provider.acc.address){
+        alert('You must add your address before you continue.');
+   }else{
+       alert('You must be registered as a supplier.');
+   }
   }
 }

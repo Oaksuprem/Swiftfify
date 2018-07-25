@@ -48,29 +48,31 @@
             {{p.title}}
           </button>
       </div>
-      <div>
+      <div style="margin-bottom: 20px">
           <button class="signOutBtn" menuClose (click)="signedOut()">
             <ion-icon name="log-out"></ion-icon>
             Sign out
           </button><br/>
       </div>
-      <div *ngIf="!registration" style="text-align: center;margin-top:20px;">
+      <div *ngIf="!registration && (!provider.supplier || provider.supplier.status =='')" style="text-align: center;margin-top:20px;">
         <button (click)="registration = true" class="regBtn">Register as a supplier</button>
       </div>
-      <div *ngIf="registration" id="regDivSupp" style="margin-top: 10px;width: 100%; margin-bottom: 20px;">
+       <div *ngIf="provider.supplier && provider.supplier.status == 'pending'" style="text-align: center;margin-top:20px;">
+        <button  class="regBtn">Pending supplier registration</button>
+      </div>
+      <div *ngIf="registration && provider.supplier.status !=='pending' && provider.supplier.status !=='approved' && provider.supplier.status !=='suspended'" id="regDivSupp" style="margin-top: 10px;width: 100%; margin-bottom: 20px;">
         <div class="spReg" >Supplier registration</div>
         <div class="spReg1"><span style="color:red; font-size:17px">* </span>You need to upload these files for verification</div><br/>
         <div>
              <div class="docReg" *ngFor="let doc of docs let x = index">
                <span>{{x+1}}. {{doc.title}}</span>
-               <button><ion-icon name="attach"></ion-icon></button><br/>
+               <button (click)="provider.upload(doc.title)"><ion-icon name="attach"></ion-icon></button><br/>
              </div>
         </div>
         <div style="text-align: center;"><button ion-button style="background-color: transparent;color: white; font-size: 16px" (click)="registration =  false">Cancel</button></div>
       </div>
-      </div>
+    </div>
   </ion-content>
-
 </ion-menu>
 <ion-nav id="nav" [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>
 

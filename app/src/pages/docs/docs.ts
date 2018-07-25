@@ -51,7 +51,9 @@ export class DocsPage {
          module: 'checkQuotation',
          id: this.data[3]
        })
+     
        this.from = {email: this.data[4]};
+       
     }else if(this.data[1] == 'checkInfo'){
       let datam = this.data[3];
        this.from = {email: datam.Id};
@@ -108,6 +110,9 @@ export class DocsPage {
             }
          break;
          case 'quotationFound':
+         if(data.info.notQuoting.findIndex(q => q == this.provider.acc.businessName) > -1){
+           $('.reason').hide();
+         }
          this.from = {
            email: data.info.from.email,
            businessName: data.info.from.buyerName
@@ -131,6 +136,11 @@ export class DocsPage {
          this.approvers = data.info.witness;
           this.doc = this.data[0];
          this.tos = data.info.to;
+          if(this.from && this.from.email !== this.acc.email){
+          $(document).ready(function(){
+            $('.designations').attr('disabled', true);
+          }); 
+       }
           break;
           case 'quoted':
           this.quoted = true;
@@ -150,6 +160,11 @@ export class DocsPage {
  makeInvoice(){
    this.navCtrl.push(ClientDocsPage, {data: ['invoice', this.acc, this.biderSelections, this.data[3], this.from.email]})
  }
+ ionViewDidLeave() {
+ if(this.navCtrl.getActive().name == 'DocPage'){
+   this.events.unsubscribe('quotation');
+  }
+}
  CreateLPO(){
    this.doc = 'lpo';
      for(let xz = 0; xz< this.items.length; xz++){
@@ -158,11 +173,16 @@ export class DocsPage {
         item = this.biders[selection].items[xz]; 
        item.total_value = item.qty * item.price;
        if(selection == 0 || selection == 1 ||selection == 2){
-
          this.biderSelections[selection].items.push(item);
          this.biderSelections[selection].amount+=item.total_value;
        }
      }
+     let thisx = this;
+     thisx.biderSelections.forEach((bider, index)=>{
+         if(bider.amount == 0){
+           thisx.biderSelections.splice(index, 1);
+         }
+     }) 
  }
  createLPo(){
    this.provider.Load('show','Creating LPO');
@@ -171,7 +191,25 @@ export class DocsPage {
      biders: this.biderSelections,
      id: this.data[3],
      approvement: this.moreLPOs,
-     owner: this.acc.email
+     owner: {
+      email: this.provider.acc.email,
+      name: this.provider.acc.businessName,
+      pic: this.provider.acc.pic
+     }
+   })
+ }
+ notQuot(reason){
+   $('.reason').hide();
+   this.provider.socketRequest({
+     module: 'notQuoting',
+     from: {
+       name: this.provider.acc.businessName,
+       pic: this.provider.acc.pic,
+       email:  this.provider.acc.email
+     },
+     toId: this.from.businessName,
+     reason: reason,
+     serial: this.quotationInfo.id
    })
  }
  makeEvaluation(){
@@ -186,15 +224,16 @@ export class DocsPage {
        this.suppliers = ["Supplier A", "Supplier B"];
        this.evaLTitles = ['Item', 'Supplier A','Supplier B', 'Award to'];
    }
-
     for(let xy = 0; xy< this.biders.length; xy++){
+     
    this.biderSelections.push({ 
           inputs: [{title: 'Vendors Name', ngBind: this.tos[xy].name},
-          {title: 'Email', ngBind: this.biders[xy].id},
+          {title: 'Email', ngBind: this.tos[xy].id},
           {title: 'Terms of Payment', ngBind: ''},
           {title: 'Delivery Point', ngBind: ''},
           {title: 'Order Date', ngBind: dateFunction()[0]}
          ],
+         pic: this.biders[this.biders.findIndex(q => q.name == this.tos[xy].name)].pic,
          items: [],
          amount: 0,
          amntWords: ''
@@ -221,6 +260,8 @@ export class DocsPage {
      approvers: this.approvers,
      businessName: this.acc.businessName,
      myId: this.acc.email,
+     myPic: this.provider.acc.pic,
+     myName: this.acc.businessName,
      quotationId: this.data[3]
    })
  }
@@ -229,18 +270,28 @@ export class DocsPage {
  	this.items.push({desc: '', unit: '', qty: '', price: '', brand:'', origin: '', selection: ''});
 
  }
+ showDets(id){
+   if(this.biders && this.biders.length > 0){
+     this.items = this.biders[this.biders.findIndex(q => q.id == id)].items;
+   }
+ }
  remove(index){
    this.items.splice(index,1);
  }
  toggleIntr0(){
    this.navCtrl.push(TermsPage);
  }
- makeQuotation(){
+ makeQuotation(id){
    this.provider.Load('show','Sending your quotation...');
    this.provider.socketRequest({
      module: 'updateQuotation',
      items: this.items,
-     myId: this.acc.email,
+     fromId: id,
+     myData:{
+       id: this.acc.email,
+       pic: this.provider.acc.pic,
+       name: this.acc.businessName
+     },
      quotation: this.data[3]
    })
  }
