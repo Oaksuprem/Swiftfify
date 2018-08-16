@@ -5,7 +5,6 @@ import {Observable } from 'rxjs/Observable';
 import { Storage } from '@ionic/storage';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 import { Camera, CameraOptions } from '@ionic-native/camera';
-import { File } from '@ionic-native/file';
 @Component({
   selector: 'page-provider',
   templateUrl: 'provider.html',
@@ -21,7 +20,6 @@ export class ProviderPage {
    url: string = 'http://swiftify.co.ke:3000/';
   constructor(private transfer: FileTransfer,
     private camera: Camera,
-    private file: File,
     private storage: Storage, 
     public socket: Socket, 
     public loadCtrl: LoadingController, 

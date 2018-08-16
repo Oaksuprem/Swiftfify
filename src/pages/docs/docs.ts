@@ -109,7 +109,7 @@ export class DocsPage {
             }
          break;
          case 'quotationFound':
-         if(data.info.notQuoting.findIndex(q => q == this.provider.acc.businessName) > -1){
+         if(data.info.notQuoting && data.info.notQuoting.findIndex(q => q == this.provider.acc.businessName) > -1){
            $('.reason').hide();
          }
          this.from = {
