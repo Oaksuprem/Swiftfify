@@ -1,0 +1,56 @@
+
+<ion-header>
+
+  <ion-navbar color="headerColor">
+    <ion-title><span style="color: white">New Request</span></ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content style="background-color: white">
+	<ion-grid>
+		<ion-row>
+			<ion-col offset-sm-1 col-sm-10>
+				<ion-list class="ionlist">
+					<ion-item no-lines>
+						<ion-label stacked>Title</ion-label>
+						<ion-textarea [(ngModel)]="title" maxlength="50" (keyup)="count(0, title)" class="ionitem" >
+							
+						</ion-textarea>
+					</ion-item>
+					<div class="max" value="50">Remaining: 50</div>
+					<ion-item no-lines>
+						<ion-label stacked>Details</ion-label>
+						<ion-textarea [(ngModel)]="details" maxlength="600" rows="15" (keyup)="count(1, details)"  class="ionitem1">
+							
+						</ion-textarea>
+					</ion-item>
+					<div class="max" value="600">Remaining: 600</div>
+					<ion-item no-lines>
+						<ion-label stacked>Search tags <span class="warnText">(at least 1 and at most 5. Separated by comma)</span></ion-label>
+						<ion-input [(ngModel)]="searchTags" class="ionitem2" >
+							
+						</ion-input>
+					</ion-item>
+					<ion-item no-lines>
+						<ion-label stacked>Location</ion-label>
+						<ion-input [(ngModel)]="location" class="ionitem3" >
+						</ion-input>
+					</ion-item>
+					<ion-item no-lines>
+						<button (click)="goToQuot({
+ 								title: title,
+ 								details: details,
+ 								searchTags: searchTags,
+ 								location: location
+					        })" [disabled]="(!title || title.trim() == '' ||
+						  !details || details.trim() == '' || !searchTags || searchTags.trim() == '' || !location || location.trim() == '')" ion-button class="ionitem4">
+							 Next
+						</button>
+					</ion-item>
+				</ion-list>
+			</ion-col>
+		</ion-row>
+	</ion-grid>
+</ion-content>

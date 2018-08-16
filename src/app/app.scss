@@ -1,0 +1,313 @@
+// http://ionicframework.com/docs/theming/
+
+
+// App Global Sass
+// --------------------------------------------------
+// Put style rules here that you want to apply globally. These
+// styles are for the entire app and not just one component.
+// Additionally, this file can be also used as an entry point
+// to import other Sass files to be included in the output CSS.
+//
+// Shared Sass variables, which can be used to adjust Ionic's
+// default Sass variables, belong in "theme/variables.scss".
+//
+// To declare rules for a specific mode, create a child rule
+// for the .md, .ios, or .wp mode classes. The mode class is
+// automatically applied to the <body> element in the app.
+.scroll-content {
+    overflow-y: auto;
+}
+.scroll-bar-indicator
+{
+  display: none;
+}
+  .reQuest{
+    text-align: center;
+    color: white;
+    font-size:16px;
+    font-weight: bold;
+  }
+.item-md.item-block .item-inner,
+  .item-md.item-input.input-has-focus .item-inner,
+  .item-md.item-input.ng-valid.input-has-value:not(.input-has-focus) .item-inner,
+  .item-md.item-input.ng-invalid.ng-touched:not(.input-has-focus) .item-inner,
+  .list-md .item-input.input-has-focus:last-child,
+  .list-md .item-input.ng-valid.input-has-value:not(.input-has-focus):last-child,
+  .list-md .item-input.ng-invalid.ng-touched:not(.input-has-focus):last-child {
+      border-bottom: none;
+      box-shadow: none;
+  }
+  .list-md .item-input.input-has-focus:last-child .item-inner,
+  .list-md .item-input.ng-valid.input-has-value:not(.input-has-focus):last-child .item-inner,
+  .list-md .item-input.ng-invalid.ng-touched:not(.input-has-focus):last-child .item-inner {
+      box-shadow: none;
+  }
+  .updateInpts{
+    display: none;
+  }
+  .spReg{
+    text-align: center;
+    font-size:18px;
+    color: white;
+
+  }
+  .spReg1{
+    margin-top: 5px;
+    color: darkgrey;
+    text-align: center;
+  }
+  .unreadTexts2{
+    background-color: orange;
+    color: black;
+    font-size:12px;
+    padding:3px;
+    border-radius:50%;
+    font-weight: bold;
+    padding-left: 6px;
+    padding-right: 6px;
+    margin-left: 30px;
+  }
+  .docReg{
+    color: grey;
+    font-size:18px;
+    margin-bottom: 25px;
+    margin-left: 20px;
+    button{
+      float: right;
+      margin-right: 10px;
+      background-color: transparent;
+      color: darkgrey;
+      font-size: 25px;
+
+    }
+  }
+
+  .inputApp{
+    border-bottom: 1px solid darkgrey;
+    height:27px;
+    color:white;
+    width: 210px;
+    margin-top: -8px;
+    font-weight: lighter;
+    font-size: 14px;
+    font-family: arial;
+  }
+  .signOutBtn{
+     background-color: transparent;
+     color: white;
+     font-size: 14px;
+     padding-right: 15px;
+     padding: 5px;
+     font-weight: bold;
+     margin-left: 20px;
+     margin-top: 10px;
+  }
+  .appSideMenu{
+    background: linear-gradient(to top right, rgba(0,0,0,0.7), grey);
+  }
+  #profileImg{
+      height:120px;
+      width:120px;
+      border-radius: 50%;
+      margin-top: 10px;
+  }
+  #businessName{
+    color: magenta;
+    font-size: 20px;
+    font-weight:bold;
+  }
+  .regBtn{
+    background-color: color($colors, headerColor);
+    font-size: 14px;
+    border-radius: 10px;
+    color: white;
+    padding: 5px;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-bottom: 20px;
+
+
+  }
+  .others{
+    padding-left: 20px;
+    margin-top: 20px;
+    color: grey;
+    font-size: 15px;
+    font-weight: bold;
+  }
+  .cont{
+    text-align: left;
+    font-size: 14px;
+    color: white;
+    padding-left: 10px;
+    margin-top: 10px;
+    padding-top: 20px;
+    font-family: arial;
+    .appvalue{
+      float: right;
+      margin-right: 10px;
+      color: lightgreen;
+      font-weight: bolder;
+
+    }
+    .editBtn{
+      background-color: transparent;
+      font-size:16px;
+      font-weight: bold;
+      color:white;
+      ion-icon{
+        font-size: 20px;
+        margin-right: 15px;
+
+      }
+    }
+
+  }
+    .ContentDiv{
+    padding: 10px;
+      font-size:16px;
+      border-bottom: 1px solid lightgrey;
+    .title{
+      color: color($colors, headerColor);
+      font-weight: bolder;
+      margin-bottom: 10px;
+    }
+    .posted{
+      float: right;
+      font-size: 12px;
+      color:grey;
+    }
+    .title1{
+      text-indent: 20px;
+      font-size: 15px;
+      font-family: sans-serif;
+      margin-bottom: 15px;
+      span{
+        position: absolute;
+      }
+
+    }
+    .title2{
+      span{
+        font-size: 14px;
+        color: grey;
+      }
+      margin-top: 10px;
+      button{
+        padding: 5px;
+        font-size: 15px;
+        font-weight: bold;
+        background-color: lightgrey;
+        border-radius: 5px;
+        margin-left: 5px;
+        margin-right: 5px;
+      }
+      margin-bottom: 10px;
+    }
+    .title3{
+      margin-top: 20px;
+      span{
+                font-size:14px;
+                font-family: sans-serif;
+                color:grey;
+
+      }
+      button{
+        float: right;
+        font-size: 15px;
+        background: transparent;
+        margin-top: -5px;
+        ion-icon{
+          font-size: 25px;
+          color: color($colors, headerColor);
+        }
+      }
+    }
+    .title0{
+        font-size: 15px;
+        font-family: sans-serif;
+        color: black;
+        margin-bottom: 10px;
+        font-weight: bold;
+        display: inline-block;
+        .profileImg{
+        height: 50px;
+        width: 50px;
+        border-radius: 50%;
+        border: 1px solid grey;
+      } 
+  
+      div{
+        display: inline-block;
+        margin-top: 15px;
+        margin-left: 10px;
+        float: right;
+      }
+
+    }
+    .posImage{
+      width:100px;
+      height:100px;
+      margin-right: 10px;
+    }
+  }
+ .ionlist{
+    ion-item{
+        font-size: 14px;
+      ion-label{
+          color: color($colors, primary);
+          font-size:15px;
+    font-family: arial;
+      }
+      .ionitem1{
+        border: 1px solid lightgrey;
+        height: 250px;
+        padding-left: 5px;
+        border-radius: 5px;
+      }
+      .ionitem, .ionitem2, .ionitem3{
+        border: 1px solid lightgrey;
+        border-radius: 5px;
+        padding-left: 5px;
+      }
+      .ionitem4{
+        width: 100%;
+        height: 35px;
+        border-radius: 10px;
+      }
+
+    }
+    .max{
+      float: right;
+      margin-top: 5px;
+      margin-right: 20px;
+      color: color($colors, primary);
+      font-size: 11px;
+      margin-bottom: 10px;
+      }
+   }
+   .sbmtReason{
+    width: 200px;
+    padding: 7px;
+    padding-left:20px;
+    padding-right:20px;
+    border-radius: 20px;
+        color: white;
+        font-size: 16px;
+
+    background-color: #750481
+  }
+  .colHeight{
+    height:100%;
+    overflow: hidden;
+    text-align: center;
+      width: 100%;
+      padding-left:7px;
+      padding-right:7px;
+      display: inline-block;
+  }
+     .colHeight .warn {
+      line-height: 1.5;
+      display: inline-block;
+      vertical-align: middle;
+  }

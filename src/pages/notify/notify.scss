@@ -1,0 +1,33 @@
+page-notify {
+.colHeight2{
+		height:100%;
+		overflow: hidden;
+		text-align: center;
+	    width: 100%;
+	    padding-left:7px;
+	    padding-right:7px;
+	    display: inline-block;
+}
+   .colHeight2 #info {
+    line-height: 1.5;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+  	img{
+  		height: 70px;
+  		width: 70px;
+  		border-radius: 50%;
+  	}
+  	#name{
+  		font-size: 16px;
+  		font-weight: bold;
+  	}
+  	#message{
+  		margin-top: 20px;
+  		width:90%;
+  		display: inline-block;
+  		font-size: 14px;
+  	}
+}
+
+}

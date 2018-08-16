@@ -1,0 +1,95 @@
+
+<ion-header>
+
+  <ion-navbar color="headerColor">
+    <div style="padding-left: 20px"><span style="color: white; font-size: 18px;">Swiftify</span></div>
+    <div>
+    	<button col-5 ion-button id="approval" (click)="changeTable('approval')" class="btn active">Documents approval</button>
+    	<button col-5 ion-button  id="transactions" (click)="changeTable('transactions')" class="btn">Transactions</button>
+    </div>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content style="background-color: white">
+	<ion-col col-12 style="text-align: center;">
+		<div id="tables">
+		<table offset-1 *ngIf="current_table == 'transactions'">
+			<thead>
+				<td>No.</td>
+				<td>Buyer</td>
+				<td>Supplier</td>
+				<td>Invoice date</td>
+				<td>Payment due</td>
+				<td>Action</td>
+			</thead>
+			<tr *ngFor="let tra of transctions let x = index">
+				<td>{{x + 1}}</td>
+				<td>{{tra.from.name}}</td>
+				<td>{{tra.info.vendorName}}</td>
+				<td>{{provider.changeDate(tra.info.dateInvoiced)}}</td>
+				<td>{{calTime(tra.info.top, tra.info.dateInvoiced)}}</td>
+				<td>
+					<tr>
+						<button (click)="hideShow(null, tra.from.name)" class="actionBtn" style="color: white;background-color: #319ac4">Message buyer</button>
+					</tr>
+					<tr>
+						<button (click)="hideShow(null, tra.info.vendorName)" class="actionBtn" style="color: white;background-color: #319ac4">Message supplier</button>
+					</tr>
+				</td>
+			</tr>
+		</table>
+		<table offset-1 *ngIf="current_table == 'approval'">
+			<thead>
+				<td>No.</td>
+				<td>Business name</td>
+				<td>Certificate of registration</td>
+				<td>KRA Certificate</td>
+				<td>Status</td>
+				<td>Action</td>
+			</thead>
+			<tr *ngFor="let user of users let q = index">
+				<td>{{q + 1}}</td>
+				<td>{{user.businessName}}</td>
+				<td>
+					<span *ngFor="let doc of user.supplier.docs">
+					  <img imageViewer class="docImage" *ngIf="doc.name == 'Certificate of Registration' " src="{{provider.url+'/'+doc.url}}"/>
+					</span>
+			    </td>
+				<td>
+					<span *ngFor="let doc of user.supplier.docs">
+					  <img imageViewer class="docImage" *ngIf="doc.name == 'KRA certificate' " src="{{provider.url+'/'+doc.url}}"/>
+					</span>
+				</td>
+				<td>{{user.supplier.status}}</td>
+				<td>
+					<tr><button (click)="changeStatus('approved', user.businessName, 'Your supplier application request has been approved')" class="actionBtn" style="color: white;background-color: green">Approve</button></tr>
+					<tr><button (click)="changeStatus('suspended', user.businessName, 'We are sorry to inform you that your account has been suspended.')"  class="actionBtn" style="color: white;background-color: #b90505">Suspend</button></tr>
+					<tr><button (click)="hideShow('not approved', user.businessName)" class="actionBtn" style="color: white;background-color: #319ac4">Send message</button></tr>
+				</td>
+			</tr>
+		</table>
+		</div>
+		<div style="display: none" id="messageArea">
+			<div style="display: inline-block;" id="messDiv">
+				<div style="padding-left: 10px;text-align: left;font-size: 16px">
+					Sending message to <strong>{{currentUser}}</strong>
+				</div><br/>
+				<textarea placeholder="Type your message here" [(ngModel)]="message">
+					
+				</textarea>
+				<br/><br/>
+				<div>
+				<button style="background-color: darkmagenta" (click)="sendMessage(message)" [disabled]="!message || message.trim() ==''">
+					Send
+				</button>
+				<button style="background-color: grey" (click)="show()" >
+					Cancel
+				</button>
+			  </div>
+		  </div>
+		</div>
+	</ion-col>
+
+</ion-content>
