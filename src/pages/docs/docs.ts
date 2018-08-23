@@ -160,7 +160,7 @@ export class DocsPage {
    this.navCtrl.push(ClientDocsPage, {data: ['invoice', this.acc, this.biderSelections, this.data[3], this.from.email]})
  }
  ionViewDidLeave() {
- if(this.navCtrl.getActive().name == 'DocPage'){
+ if(this.navCtrl.getActive().name == 'DocsPage'){
    this.events.unsubscribe('quotation');
   }
 }
@@ -224,7 +224,6 @@ export class DocsPage {
        this.evaLTitles = ['Item', 'Supplier A','Supplier B', 'Award to'];
    }
     for(let xy = 0; xy< this.biders.length; xy++){
-     
    this.biderSelections.push({ 
           inputs: [{title: 'Vendors Name', ngBind: this.tos[xy].name},
           {title: 'Email', ngBind: this.tos[xy].id},

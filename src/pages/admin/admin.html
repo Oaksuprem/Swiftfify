@@ -14,6 +14,7 @@
 
 <ion-content style="background-color: white">
 	<ion-col col-12 style="text-align: center;">
+		<div class="scrollmenu"   style="margin-top:30px; ">
 		<div id="tables">
 		<table offset-1 *ngIf="current_table == 'transactions'">
 			<thead>
@@ -63,7 +64,7 @@
 					</span>
 				</td>
 				<td>{{user.supplier.status}}</td>
-				<td>
+				<td> 
 					<tr><button (click)="changeStatus('approved', user.businessName, 'Your supplier application request has been approved')" class="actionBtn" style="color: white;background-color: green">Approve</button></tr>
 					<tr><button (click)="changeStatus('suspended', user.businessName, 'We are sorry to inform you that your account has been suspended.')"  class="actionBtn" style="color: white;background-color: #b90505">Suspend</button></tr>
 					<tr><button (click)="hideShow('not approved', user.businessName)" class="actionBtn" style="color: white;background-color: #319ac4">Send message</button></tr>
@@ -77,11 +78,19 @@
 					Sending message to <strong>{{currentUser}}</strong>
 				</div><br/>
 				<textarea placeholder="Type your message here" [(ngModel)]="message">
-					
 				</textarea>
 				<br/><br/>
+				<div style="font-size:18px;" *ngIf="current_table == 'approval'">
+					Which document need to be re-uploaded?
+				 <ion-list radio-group [(ngModel)]="rejected" style="text-align: center;">
+                   <ion-item *ngFor="let doc of doccs" no-lines class="ionItem" style="width:50%;">
+                      <ion-label style="color:darkmagenta;font-size: 20px;font-weight: bold;">{{doc}}</ion-label>
+                      <ion-radio value="{{doc}}" checked></ion-radio>
+                    </ion-item>
+                  </ion-list>
+				</div>
 				<div>
-				<button style="background-color: darkmagenta" (click)="sendMessage(message)" [disabled]="!message || message.trim() ==''">
+				<button style="background-color: darkmagenta" (click)="sendMessage(message)" [disabled]="(!rejected && current_table == 'approval') || !message || message.trim() ==''">
 					Send
 				</button>
 				<button style="background-color: grey" (click)="show()" >
@@ -90,6 +99,7 @@
 			  </div>
 		  </div>
 		</div>
+	</div>
 	</ion-col>
 
 </ion-content>

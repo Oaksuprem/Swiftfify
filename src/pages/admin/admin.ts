@@ -16,6 +16,8 @@ export class AdminPage {
   currentUser: string;
   message: string;
   transctions: any = [];
+  rejected: any;
+  doccs: any = ['All documents',"KRA certificate","Certificate of Registration"]
   constructor(public navCtrl: NavController, private provider:ProviderPage,  public navParams: NavParams) {
   	this.current_table = 'approval';
   	this.load();
@@ -27,17 +29,19 @@ export class AdminPage {
   				if(data.status){
   					this.provider.toast('User supplier status has been changed', 'middle');
   					if(data.status == 'null')
-                       this.users.splice(this.users.findIndex(q => q.businessName == data.user), 1);
+                this.users.splice(this.users.findIndex(q => q.businessName == data.user), 1);
   					else
   						this.users[this.users.findIndex(q => q.businessName == data.user)].supplier.status == data.status
   				}else{
   					this.provider.toast('Message sent', 'middle');
   					this.message = '';
+            this.rejected = undefined;
   				}
   				break;
   			
   			default:
            this.users = data.users;
+           console.log(data);
            this.transctions = data.transactions;
   				break;
   		}
@@ -80,6 +84,7 @@ export class AdminPage {
     	status: status,
     	user: user,
     	reason: reason,
+      rejected: this.rejected,
     	from: {
     		name: acc.businessName,
     		email: acc.email,
@@ -88,6 +93,11 @@ export class AdminPage {
     	serial: Date.now()
     })
  }
+ ionViewDidLeave() {
+     if(this.navCtrl.getActive().name == 'AdminPage'){
+       this.provider.events.unsubscribe('suppliers');
+    }
+  }
  calTime(data, invoicedate){
  	          var hours;
                if (data == 'Pay within 2 months'){

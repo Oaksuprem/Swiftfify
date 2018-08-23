@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { NavController, Events, Platform } from 'ionic-angular';
+import { NavController, Events, Platform, AlertController } from 'ionic-angular';
 import  * as $ from "jquery";
-import { StatusBar } from '@ionic-native/status-bar';
 import { ProviderPage } from '../provider/provider';
 import { Storage } from '@ionic/storage';
 import { OfferPage } from '../offer/offer';
@@ -43,7 +42,7 @@ export class HomePage {
    code: any;
    verError1: boolean;
    logged: boolean = false;
-  constructor(public plt: Platform, private events: Events, private storage: Storage, public provider: ProviderPage, public navCtrl: NavController, private statusBar: StatusBar) {
+  constructor(public plt: Platform, private events: Events,private alertCtrl:AlertController, private storage: Storage, public provider: ProviderPage, public navCtrl: NavController) {
   	  this.provider.makeInfo();
       $(document).ready(function(){
         var height = $('.colHeight').css('height');
@@ -138,9 +137,15 @@ export class HomePage {
                  this.requests[ind].props+=1;
                }
           }else if(data.submodule == 'logOut'){
+            this.storage.ready().then(()=>{
              this.storage.remove('swiftifyVariables').then(() => {
                this.accountInfo = undefined;
                this.logged = false;
+               location.reload();
+             }).catch(function(err){
+               if(err)
+                 throw err;
+             });
              }).catch(function(err){
                if(err)
                  throw err;
@@ -269,8 +274,21 @@ export class HomePage {
         });
   }
   goToRequest(req){
-    if(!this.accountInfo)
-      alert('Please log in first to view this content');
+    if(!this.accountInfo){
+      let alert = this.alertCtrl.create({
+        title: "Login required",
+        message: 'Please log in first to view this content',
+         buttons:[{
+           text: 'Ok',
+           role:'destructive',
+           handler: ()=>{
+             let item = this.menuItems[2];
+             this.itemClicked(item, 2, item.hide, item.show)
+           }
+         }]
+      });
+      alert.present();
+    }
     else
     this.navCtrl.push(OfferPage, {data: [req, this.accountInfo]});
   }
@@ -317,7 +335,6 @@ export class HomePage {
       this.hideShow(hide, show)	
       if(index == 2){
 	  	$('.homePage').fadeOut(600);
-        this.statusBar.hide();
       }
   }
   hideShow(hide, show){

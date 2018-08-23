@@ -41,13 +41,15 @@ export class ProviderPage {
                      });
               		break;
           		case 'newNote':
-          		    var xr = datam.tos.findIndex(q => q ==  this.acc.businessName );
-	          		if(xr > -1){
-	              		  this.notifications +=1;
-	              		  if(datam.status){
-	              		  	this.supplier.status = datam.status;
-	              		  }
-	          		}
+	          		if(this.acc){
+	          		    var xr = datam.tos.findIndex(q => q ==  this.acc.businessName );
+		          		if(xr > -1){
+		              		  this.notifications +=1;
+		              		  if(datam.status){
+		              		  	this.supplier.status = datam.status;
+		              		  }
+		          		}
+		          	}
               		break;
               	default:
               		this.notifications = 0;

@@ -3,7 +3,7 @@
 
   <ion-navbar color="headerColor">
     <div class="header">Creating an offer
-     	<button (click)="createDoc()" class="button" *ngIf="(!req.quotationId && req.Id == acc.email)" [disabled]="selections.length < 1">Create quotation</button>
+     	<button (click)="createDoc()" class="button" *ngIf="(!req.quotationId && req.Id == acc.email)" [disabled]="selections.length < 3">Create quotation</button>
     </div>
   </ion-navbar>
 

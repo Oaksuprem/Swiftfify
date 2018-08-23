@@ -7,6 +7,7 @@ import { Storage } from '@ionic/storage';
 import  * as $ from "jquery";
 import { ProviderPage } from '../pages/provider/provider';
 import { ListPage } from '../pages/list/list';
+import { HeaderColor } from '@ionic-native/header-color';
 
 
 @Component({
@@ -23,10 +24,12 @@ export class MyApp {
                  {title: 'Certificate of Registration', abr: 'COR', uploaded: false},
                  {title: 'KRA certificate', abr: 'KCR', uploaded: false}
                ]
-  constructor(private provider:ProviderPage, private storage: Storage, platform: Platform, 
+  constructor(private hederClr: HeaderColor, private provider:ProviderPage, private storage: Storage, platform: Platform, 
     statusBar: StatusBar, private events: Events,  splashScreen: SplashScreen) {
     platform.ready().then(() => {
-      statusBar.styleDefault();
+     statusBar.styleLightContent();
+     this.hederClr.tint('#490451');
+     statusBar.backgroundColorByHexString('#490451');
       splashScreen.hide();
       this.manipulateData();
     });

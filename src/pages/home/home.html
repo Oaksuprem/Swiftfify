@@ -28,8 +28,8 @@
 					</div>
 			   </div>
   
-				<ion-list style="margin-top: 70px;height: 90%; overflow: hidden;overflow-y: auto;">
-					<ion-item  class="itemSearch searchIconx" style="display: none;" col-12>
+				<ion-list style="margin-top: 70px;height: 93%; overflow: hidden;">
+					<ion-item *ngIf="requests.length !== 0" class="itemSearch searchIconx" style="display: none;" col-12>
 			    	   <ion-searchbar col-12 showCancelButton="false" cancelButtonText='' [(ngModel)]="searchVal" color="headerColor" [(ngModel)]="search_value"   class="searchInput">
 	                     </ion-searchbar>
 				    	<button (click)="fetch(search_value)" *ngIf="search_value && search_value.trim() !== ''"  item-end class="searchIcon2">
@@ -39,8 +39,8 @@
 					      <ion-icon name="arrow-up"></ion-icon>
 					    </button>
 				    </ion-item>
-		    <div class="containery container4">
-				 <div class="ContentDiv " *ngFor="let req of requests" >
+		    <div class="containery container4" *ngIf="requests.length !== 0" style="height:100%;overflow: hidden;padding-bottom:20px;overflow-y: auto;">
+				   <div class="ContentDiv " *ngFor="let req of requests" >
 		    	      <div (click)="goToRequest(req)" class="title0">
 		    	      	<img src="{{provider.url+'/'+req.pic}}" class="profileImg" imageViewer/>
 		    	        <div > {{req.businessName}}</div>
@@ -60,7 +60,7 @@
 				    	</div>
 				    </div>
 	    	</div>
-<div class="containery container5" style="padding:10px;">
+<div class="containery container5" style="padding:10px;height: 100%;overflow: hidden;overflow-y: auto">
 	<div style="text-align: center;">
 		<h3>Welcome to Swiftify</h3>
 	    <i>Simplifying your order-to-payment circle.</i>
@@ -81,7 +81,7 @@
   	</ul>
   	<ul>
   		<strong>How do we do it?</strong>
-  		<li><strong>Indentify need and Requisition generation.</strong>
+  		<li><strong>Identify need and Requisition generation.</strong>
   		Identify your company's need and generate the necessary and detailed requisition.</li>
   		<li><strong>Foward the Requisition.</strong>The requisition will be forward directly to your pool of suppliers on your database to invite them to submit a bid for the purchase contract.</li>
   		<li><strong>Bidding, Negotiation, and Supplier selection.</strong>After the bidding is done, evaluate and select your most suitable bidder.</li>
@@ -131,7 +131,7 @@
 	  </div>
 
     </div>
-     <div class="containery container3" style="background-image: url('assets/imgs/bg1.jpeg'); height: 100%;">
+     <div class="containery container3" style="background-image: url('assets/imgs/bg1.png'); height: 100%;">
     	<div id="cont">
     		<div style="display: inline-block;">
     			<img src="assets/icon/icon.png">
@@ -144,7 +144,7 @@
 				</ul>
     		</div>
     		<div id="button">
-    			<span *ngIf="this.plt && !this.plt.is('ios') && !this.plt.is('android')">
+    			<span *ngIf="this.plt && (this.plt.is('core') || this.plt.is('mobileweb'))">
 	    			<button ion-button  >
 	    				<img src="assets/imgs/ios.png">
 	    			</button>
@@ -153,7 +153,7 @@
 	    			</button>
 	    			<br/><br/>
 	    		</span>
-	    		<button *ngIf=" this.plt && (this.plt.is('ios') || this.plt.is('android'))" ion-button class="reqsView" (click)="itemClicked(menuItems[1], 1, menuItems[1].hide, menuItems[1].show)">View Requests</button>
+	    		<button *ngIf=" this.plt && !this.plt.is('core') && !this.plt.is('mobileweb')" ion-button class="reqsView" (click)="itemClicked(menuItems[1], 1, menuItems[1].hide, menuItems[1].show)">View Requests</button>
     			<button (click)="terms()" ion-button class="reqsView reqsView1">Terms and Conditions</button>
     		</div>
     		</div>

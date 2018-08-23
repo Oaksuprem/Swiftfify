@@ -21,6 +21,7 @@ import { FileTransfer,  FileTransferObject } from '@ionic-native/file-transfer';
 import { File } from '@ionic-native/file';
 import { Camera } from '@ionic-native/camera';
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
+import { HeaderColor } from '@ionic-native/header-color';
 //const config: SocketIoConfig = { url: 'http://192.168.1.101:8081', options: {} };
 const config: SocketIoConfig = { url: 'http://swiftify.co.ke:8080', options: {} };
 
@@ -72,6 +73,7 @@ const config: SocketIoConfig = { url: 'http://swiftify.co.ke:8080', options: {} 
      FileTransfer,
     FileTransferObject,
     File,
+    HeaderColor,
     Camera
   ]
 })

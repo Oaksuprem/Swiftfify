@@ -153,7 +153,7 @@ export class ClientDocsPage {
           this.receipt = data.receipt;
           break;
           case 'getDeliery':
-          this.deliveryNote.newDel = data.doc[0];
+         this.deliveryNote.newDel = data.doc;
           break;
       }
 
